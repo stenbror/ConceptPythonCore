@@ -14,6 +14,8 @@ namespace PythonCore::Runtime
             {
                 PY_INVALID, PY_EOF, PY_INDENT, PY_DEDENT, PY_NEWLINE, 
 
+                PY_LAMBDA, PY_IF, PY_ELSE,
+
                 PY_COLON_ASSIGN
             };
 

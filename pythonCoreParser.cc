@@ -16,7 +16,25 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNamedExpr()
     return left; 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTest() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTest() 
+{   
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA) return parseLambdaDef();
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseOrTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_IF)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto right = parseOrTest();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_ELSE) throw ;
+        auto op2 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto next = parseTest();
+        return std::make_shared<ASTTestExpressionNode>(start, m_Lexer->getPosition(), left, op1, right, op2, next);
+    }
+    return left; 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestNoCond() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDef() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDefNoCond() { return nullptr; }
