@@ -5,15 +5,10 @@
 #include <memory>
 #include <vector>
 
+#include <pythonCoreTokenizer.h>
+
 namespace PythonCore::Runtime
 {
-
-
-    class Token
-    {
-
-    };
-
 
     class ASTNode
     {

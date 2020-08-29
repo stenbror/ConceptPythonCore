@@ -3,6 +3,7 @@
 #define PYTHONCORE_PARSER_H
 
 #include <abstractSyntaxTree.h>
+#include <pythonCoreTokenizer.h>
 
 namespace PythonCore::Runtime
 {
@@ -33,6 +34,7 @@ namespace PythonCore::Runtime
 
         protected:
             std::shared_ptr<Token> m_CurSymbol;
+            std::shared_ptr<PythonCoreTokenizer> m_Lexer;
     };
 } // namespace PythonCore::Runtime
 
