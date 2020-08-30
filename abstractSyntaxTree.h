@@ -220,7 +220,8 @@ namespace PythonCore::Runtime
 
             void addStringNode(std::shared_ptr<Token> node);
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> getStringNodes(); 
-            unsigned int count(); 
+            unsigned int count();
+            void setEndPosition(unsigned int end);
 
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_StringList;

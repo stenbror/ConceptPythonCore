@@ -462,6 +462,26 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom()
                 return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_NUMBER, op1);
             }
             break;
+        case Token::TokenKind::PY_STRING:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_STRING)
+                {
+                    return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_STRING, op1);
+                }
+                auto res = std::make_shared<ASTStringListExpressionNode>(start, m_Lexer->getPosition());
+                res->addStringNode(op1);
+                while (m_CurSymbol->kind() == Token::TokenKind::PY_STRING)
+                {
+                    op1 = m_CurSymbol;
+                    m_Lexer->advance();
+                    res->addStringNode(op1);
+                }
+                res->setEndPosition(m_Lexer->getPosition());
+                return res;
+            }
+            break;
         default:    throw ;
     }
 }

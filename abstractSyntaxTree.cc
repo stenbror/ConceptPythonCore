@@ -288,3 +288,5 @@ void ASTStringListExpressionNode::addStringNode(std::shared_ptr<Token> node) {  
 std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTStringListExpressionNode::getStringNodes() { return m_StringList; };
 
 unsigned int ASTStringListExpressionNode::count() { return (m_StringList.get())->size(); };
+
+void ASTStringListExpressionNode::setEndPosition(unsigned int end) { m_EndPos = end; }
