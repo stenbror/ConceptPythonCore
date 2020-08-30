@@ -203,9 +203,72 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseStarExpr()
     return std::make_shared<ASTUnaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_STAR_EXPR, op1, right); 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExpr() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseXorExpr() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAndExpr() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseXorExpr();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_BIT_OR)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto right = parseXorExpr();
+        auto res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_OR, left, op1, right);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_BIT_OR)
+        {
+            op1 = m_CurSymbol;
+            m_CurSymbol = m_Lexer->advance();
+            right = parseXorExpr();
+            res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_OR, res, op1, right);
+        }
+        return res;
+    }
+    return left; 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseXorExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseAndExpr();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_BIT_XOR)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto right = parseAndExpr();
+        auto res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_XOR, left, op1, right);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_BIT_XOR)
+        {
+            op1 = m_CurSymbol;
+            m_CurSymbol = m_Lexer->advance();
+            right = parseAndExpr();
+            res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_XOR, res, op1, right);
+        }
+        return res;
+    }
+    return left;
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAndExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseShiftExpr();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_BIT_AND)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto right = parseShiftExpr();
+        auto res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_AND, left, op1, right);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_BIT_AND)
+        {
+            op1 = m_CurSymbol;
+            m_CurSymbol = m_Lexer->advance();
+            right = parseShiftExpr();
+            res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_AND, res, op1, right);
+        }
+        return res;
+    }
+    return left;
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseShiftExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArithExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTerm() { return nullptr; }
