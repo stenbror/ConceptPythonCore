@@ -313,7 +313,58 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArithExpr()
     return left;
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTerm() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTerm() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseFactor();
+    auto symbol = m_CurSymbol->kind();
+    if (symbol == Token::TokenKind::PY_MUL || symbol == Token::TokenKind::PY_DIV || symbol == Token::TokenKind::PY_FLOOR_DIV || symbol == Token::TokenKind::PY_MODULO ||
+        symbol == Token::TokenKind::PY_MATRICE)
+        {
+            std::shared_ptr<ASTExpressionNode> res = left;
+            std::shared_ptr<Token> op1;
+            auto kind = ASTNode::NodeKind::NK_INVALID;
+            while ( symbol == Token::TokenKind::PY_MUL || symbol == Token::TokenKind::PY_DIV || symbol == Token::TokenKind::PY_FLOOR_DIV || symbol == Token::TokenKind::PY_MODULO ||
+                    symbol == Token::TokenKind::PY_MATRICE)
+                    {
+                        switch (symbol)
+                        {
+                            case Token::TokenKind::PY_MUL:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_MUL;
+                                break;
+                            case Token::TokenKind::PY_DIV:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_DIV;
+                                break;
+                            case Token::TokenKind::PY_FLOOR_DIV:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_FLOOR_DIV;
+                                break;
+                            case Token::TokenKind::PY_MODULO:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_MODULO;
+                                break;
+                            case Token::TokenKind::PY_MATRICE:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_MATRICE;
+                                break;
+                            default:
+                                break;
+                        }
+                        auto right = parseFactor();
+                        res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), kind, res, op1, right );
+                    }
+            return res;
+        }
+    return left; 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFactor() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parsePower() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr() { return nullptr; }
