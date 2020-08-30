@@ -40,8 +40,29 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestNoCond()
     return m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA ? parseLambdaDefNoCond() : parseOrTest();
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDef() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDefNoCond() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDef() 
+{ 
+    return parseLambdaCommon(true); 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDefNoCond() 
+{ 
+    return parseLambdaCommon(false); 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaCommon(bool isConditional)
+{
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_CurSymbol = m_Lexer->advance();
+    auto left = m_CurSymbol->kind() == Token::TokenKind::PY_COLON ? nullptr : nullptr /* VarArgsList */ ;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op2 = m_CurSymbol;
+    m_CurSymbol = m_Lexer->advance();
+    auto right = isConditional ? parseTest() : parseOrTest();
+    return std::make_shared<ASTLambdaExpressionNode>(start, m_Lexer->getPosition(), op1, left, op2, right); 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseOrTest() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAndTest() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNotTest() { return nullptr; }

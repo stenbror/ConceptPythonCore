@@ -16,6 +16,7 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> parseTestNoCond();
             std::shared_ptr<ASTExpressionNode> parseLambdaDef();
             std::shared_ptr<ASTExpressionNode> parseLambdaDefNoCond();
+            std::shared_ptr<ASTExpressionNode> parseLambdaCommon(bool isConditional);
             std::shared_ptr<ASTExpressionNode> parseOrTest();
             std::shared_ptr<ASTExpressionNode> parseAndTest();
             std::shared_ptr<ASTExpressionNode> parseNotTest();
