@@ -418,5 +418,50 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr()
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom() 
 { 
     unsigned int start = m_Lexer->getPosition();
-    return nullptr; 
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_NONE:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_NONE, op1);
+            }
+            break;
+        case Token::TokenKind::PY_FALSE:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_FALSE, op1);
+            }
+            break;
+        case Token::TokenKind::PY_TRUE:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TRUE, op1);
+            }
+            break;
+        case Token::TokenKind::PY_ELIPSIS:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_ELIPSIS, op1);
+            }
+            break;
+        case Token::TokenKind::PY_NAME:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_NAME, op1);
+            }
+            break;
+        case Token::TokenKind::PY_NUMBER:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_NUMBER, op1);
+            }
+            break;
+        default:    throw ;
+    }
 }
