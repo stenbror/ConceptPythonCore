@@ -36,7 +36,8 @@ bool ASTNode::isExpressionNode()
         case NodeKind::NK_AND:
         case NodeKind::NK_SHIFT_LEFT:
         case NodeKind::NK_SHIFT_RIGHT:
-        case NodeKind::NK_PLUS_NK_MINUS:
+        case NodeKind::NK_PLUS:
+        case NodeKind::NK_MINUS:
         case NodeKind::NK_MUL:
         case NodeKind::NK_DIV:
         case NodeKind::NK_FLOOR_DIV:

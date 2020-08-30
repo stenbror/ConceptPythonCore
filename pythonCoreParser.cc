@@ -291,7 +291,28 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseShiftExpr()
     return left;
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArithExpr() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArithExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseTerm();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_PLUS || m_CurSymbol->kind() == Token::TokenKind::PY_MINUS)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto right = parseTerm();
+        auto res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), op1->kind() == Token::TokenKind::PY_PLUS ? ASTNode::NodeKind::NK_PLUS : ASTNode::NodeKind::NK_MINUS, left, op1, right);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_PLUS || m_CurSymbol->kind() == Token::TokenKind::PY_MINUS)
+        {
+            op1 = m_CurSymbol;
+            m_CurSymbol = m_Lexer->advance();
+            right = parseTerm();
+            res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), op1->kind() == Token::TokenKind::PY_PLUS ? ASTNode::NodeKind::NK_PLUS : ASTNode::NodeKind::NK_MINUS, res, op1, right);
+        }
+        return res;
+    }
+    return left;
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTerm() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFactor() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parsePower() { return nullptr; }
