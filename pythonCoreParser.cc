@@ -18,7 +18,7 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNamedExpr()
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTest() 
 {   
-    if (m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA) return parseLambdaDef();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA) return parseLambdaCommon(true);
     unsigned int start = m_Lexer->getPosition();
     auto left = parseOrTest();
     if (m_CurSymbol->kind() == Token::TokenKind::PY_IF)
@@ -37,17 +37,7 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTest()
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestNoCond() 
 { 
-    return m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA ? parseLambdaDefNoCond() : parseOrTest();
-}
-
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDef() 
-{ 
-    return parseLambdaCommon(true); 
-}
-
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDefNoCond() 
-{ 
-    return parseLambdaCommon(false); 
+    return m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA ? parseLambdaCommon(false) : parseOrTest();
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaCommon(bool isConditional)
