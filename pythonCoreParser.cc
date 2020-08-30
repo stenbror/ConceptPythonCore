@@ -35,7 +35,11 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTest()
     return left; 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestNoCond() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestNoCond() 
+{ 
+    return m_CurSymbol->kind() == Token::TokenKind::PY_LAMBDA ? parseLambdaDefNoCond() : parseOrTest();
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDef() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaDefNoCond() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseOrTest() { return nullptr; }
