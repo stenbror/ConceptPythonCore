@@ -392,5 +392,31 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parsePower()
     return left; 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<Token> await;
+    std::shared_ptr<ASTExpressionNode> right;
+    bool isAwait = false;
+    bool hasTrailer = false;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_AWAIT)
+    {
+        await = m_CurSymbol;
+        m_Lexer->advance();
+        isAwait = true;
+    }
+    auto left = parseAtom();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN || m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_BRACKET || m_CurSymbol->kind() == Token::TokenKind::PY_PERIOD)
+    {
+        hasTrailer = true;
+        // Handle Trailer here later!
+    }
+    if (!isAwait && !hasTrailer) return left; 
+    return std::make_shared<ASTAtomExpressionNode>(start, m_Lexer->getPosition(), await, left, right);
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    return nullptr; 
+}
