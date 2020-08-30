@@ -182,6 +182,23 @@ std::shared_ptr<Token> ASTBinaryExpressionNode::getOperatorOne() { return m_Op1;
 std::shared_ptr<ASTExpressionNode> ASTBinaryExpressionNode::getRightNode() { return m_Right; };
 
 
+//
+ASTComparisonExpressionNode::ASTComparisonExpressionNode(
+            unsigned int start,
+            unsigned int end, 
+            NodeKind kind,
+            std::shared_ptr<ASTExpressionNode> left,
+            std::shared_ptr<Token> op1,
+            std::shared_ptr<Token> op2,
+            std::shared_ptr<ASTExpressionNode> right
+        ) : ASTExpressionNode(start, end, kind), m_Left(left), m_Op1(op1), m_Op2(op2), m_Right(right) {}
+
+std::shared_ptr<ASTExpressionNode> ASTComparisonExpressionNode::getLeftNode() { return m_Left; }
+std::shared_ptr<Token> ASTComparisonExpressionNode::getOperatorOne() { return m_Op1; }
+std::shared_ptr<Token> ASTComparisonExpressionNode::getOperatorTwo() { return m_Op2; }
+std::shared_ptr<ASTExpressionNode> ASTComparisonExpressionNode::getRightNode() { return m_Right; }
+
+
 // ASTTestExpressionNode //////////////////////////////////////////////////////////////////////////////////////////////
 ASTTestExpressionNode::ASTTestExpressionNode(  unsigned int start, 
                                     unsigned int end, 

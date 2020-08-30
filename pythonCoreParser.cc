@@ -110,7 +110,90 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNotTest()
     return parseComparison(); 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseComparison() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseComparison() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseExpr();
+    auto symbol = m_CurSymbol->kind();
+    if (symbol == Token::TokenKind::PY_LESS || symbol == Token::TokenKind::PY_LESS_EQUAL || symbol == Token::TokenKind::PY_EQUAL || symbol == Token::TokenKind::PY_GREATER_EQUAL ||
+        symbol == Token::TokenKind::PY_GREATER || symbol == Token::TokenKind::PY_EQUAL || symbol == Token::TokenKind::PY_NOT_EQUAL || symbol == Token::TokenKind::PY_IS ||
+        symbol == Token::TokenKind::PY_NOT || symbol == Token::TokenKind::PY_IN)
+        {
+            std::shared_ptr<ASTExpressionNode> res = left;
+            std::shared_ptr<Token> op1;
+            std::shared_ptr<Token> op2;
+            auto kind = ASTNode::NodeKind::NK_INVALID;
+            while ( symbol == Token::TokenKind::PY_LESS || symbol == Token::TokenKind::PY_LESS_EQUAL || symbol == Token::TokenKind::PY_EQUAL || symbol == Token::TokenKind::PY_GREATER_EQUAL ||
+                    symbol == Token::TokenKind::PY_GREATER || symbol == Token::TokenKind::PY_EQUAL || symbol == Token::TokenKind::PY_NOT_EQUAL || symbol == Token::TokenKind::PY_IS ||
+                    symbol == Token::TokenKind::PY_NOT || symbol == Token::TokenKind::PY_IN)
+                    {
+                        switch (symbol)
+                        {
+                            case Token::TokenKind::PY_LESS:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_LESS;
+                                break;
+                            case Token::TokenKind::PY_LESS_EQUAL:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_LESS_EQUAL;
+                                break;
+                            case Token::TokenKind::PY_EQUAL:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_EQUAL;
+                                break;
+                            case Token::TokenKind::PY_GREATER_EQUAL:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_GREATER_EQUAL;
+                                break;
+                            case Token::TokenKind::PY_GREATER:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_GREATER;
+                                break;
+                            case Token::TokenKind::PY_NOT_EQUAL:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_NOT_EQUAL;
+                                break;
+                            case Token::TokenKind::PY_IN:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_IN;
+                                break;
+                            case Token::TokenKind::PY_NOT:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                if (m_CurSymbol->kind() != Token::TokenKind::PY_IN) throw ;
+                                op2 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                kind = ASTNode::NodeKind::NK_NOT_IN;
+                                break;
+                            case Token::TokenKind::PY_IS:
+                                op1 = m_CurSymbol;
+                                m_CurSymbol = m_Lexer->advance();
+                                if (m_CurSymbol->kind() == Token::TokenKind::PY_NOT)
+                                {
+                                     op2 = m_CurSymbol;
+                                    m_CurSymbol = m_Lexer->advance();
+                                    kind = ASTNode::NodeKind::NK_IS_NOT;
+                                }
+                                else kind = ASTNode::NodeKind::NK_IS;
+                                break;
+                            default:
+                                break;
+                        }
+                        auto right = parseExpr();
+                        res = std::make_shared<ASTComparisonExpressionNode>(start, m_Lexer->getPosition(), kind, res, op1, op2, right );
+                    }
+            return res;
+        }
+    return left; 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseStarExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseXorExpr() { return nullptr; }
