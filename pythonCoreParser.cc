@@ -365,7 +365,19 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTerm()
     return left; 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFactor() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFactor() 
+{
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_PLUS || m_CurSymbol->kind() == Token::TokenKind::PY_MINUS || m_CurSymbol->kind() == Token::TokenKind::PY_BIT_INVERT)
+    {
+        unsigned int start = m_Lexer->getPosition();
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseFactor();
+        return std::make_shared<ASTUnaryExpressionNode>(start, m_Lexer->getPosition(), op1->kind() == Token::TokenKind::PY_PLUS ? ASTNode::NodeKind::NK_PLUS : op1->kind() == Token::TokenKind::PY_MINUS ? ASTNode::NodeKind::NK_MINUS : ASTNode::NodeKind::NK_BIT_INVERT, op1, right);
+    } 
+    return parsePower(); 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parsePower() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom() { return nullptr; }
