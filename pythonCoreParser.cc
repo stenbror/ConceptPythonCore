@@ -378,6 +378,19 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFactor()
     return parsePower(); 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parsePower() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parsePower() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseAtomExpr();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+    {
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseFactor();
+        return std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_POWER, left, op1, right);
+    }
+    return left; 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom() { return nullptr; }
