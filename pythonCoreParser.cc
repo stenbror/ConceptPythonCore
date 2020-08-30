@@ -53,7 +53,28 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseLambdaCommon(bool isCo
     return std::make_shared<ASTLambdaExpressionNode>(start, m_Lexer->getPosition(), op1, left, op2, right); 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseOrTest() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseOrTest() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseAndTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_OR)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        auto right = parseAndTest();
+        auto res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_OR_TEST, left, op1, right);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_OR)
+        {
+            op1 = m_CurSymbol;
+            m_CurSymbol = m_Lexer->advance();
+            right = parseAndTest();
+            res = std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_OR_TEST, res, op1, right);
+        }
+        return res;
+    }
+    return left; 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAndTest() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNotTest() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseComparison() { return nullptr; }
