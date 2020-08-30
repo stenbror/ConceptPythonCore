@@ -194,7 +194,15 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseComparison()
     return left; 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseStarExpr() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseStarExpr() 
+{   
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_CurSymbol = m_Lexer->advance();
+    auto right = parseExpr();
+    return std::make_shared<ASTUnaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_STAR_EXPR, op1, right); 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseXorExpr() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAndExpr() { return nullptr; }
