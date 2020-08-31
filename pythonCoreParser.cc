@@ -602,8 +602,29 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList()
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIter() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSyncCompFor() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompFor() { return nullptr; }
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIter() 
+{ 
+    return m_CurSymbol->kind() == Token::TokenKind::PY_FOR || m_CurSymbol->kind() == Token::TokenKind::PY_ASYNC ? parseCompFor() : parseCompIf(); 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSyncCompFor() 
+{ 
+    return nullptr; 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompFor() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ASYNC)
+    {
+        auto op = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseSyncCompFor();
+        return std::make_shared<ASTUnaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_COMP_FOR, op, right);
+    }
+    return parseSyncCompFor(); 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIf() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseYieldExpr() { return nullptr; }
