@@ -488,7 +488,33 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom()
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestListComp() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTrailer() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSubscriptList() { return nullptr; }
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSubscriptList() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto node = parseSubscript();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_SUBSCRIPTION_LIST);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            auto op = m_CurSymbol;
+            m_Lexer->advance();
+            res->addNodes(node, op);
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw;
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_BRACKET)
+            {
+                node = parseSubscript();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_COMMA) 
+                {
+                    res->addNodes(node, nullptr);
+                }
+            }
+        }
+        return res;
+    }
+    return node;
+}
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSubscript() 
 { 
@@ -554,7 +580,7 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList()
     auto node = parseTest();
     if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
     {
-        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_EXPR_LIST);
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TEST_LIST);
         while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
         {
             auto op = m_CurSymbol;
