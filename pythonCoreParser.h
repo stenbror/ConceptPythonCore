@@ -11,6 +11,9 @@ namespace PythonCore::Runtime
     {
         public:
 
+            std::shared_ptr<ASTStatementNode> parseTestListStarExpr();
+
+
             std::shared_ptr<ASTExpressionNode> parseNamedTest();
             std::shared_ptr<ASTExpressionNode> parseTest();
             std::shared_ptr<ASTExpressionNode> parseTestNoCond();

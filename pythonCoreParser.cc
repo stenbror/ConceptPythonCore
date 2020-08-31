@@ -2,6 +2,12 @@
 
 using namespace PythonCore::Runtime;
 
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
+
+
+
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNamedTest() 
 { 
     unsigned int start = m_Lexer->getPosition();
@@ -640,4 +646,18 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIf()
     return std::make_shared<ASTIfComprehensionExpressionNode>(start, m_Lexer->getPosition(), op, right, nullptr);
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseYieldExpr() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseYieldExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_FROM)
+    {
+        auto op2 = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseTest();
+        return std::make_shared<ASTYieldFromExpressionNode>(start, m_Lexer->getPosition(), op1, op2, right);
+    }
+    auto right = parseTestListStarExpr();
+    return std::make_shared<ASTYieldExpression>(start, m_Lexer->getPosition(), op1, right); 
+}

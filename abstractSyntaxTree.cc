@@ -350,3 +350,23 @@ std::shared_ptr<Token> ASTIfComprehensionExpressionNode::getOperatorOne() { retu
 std::shared_ptr<ASTExpressionNode> ASTIfComprehensionExpressionNode::getRight() { return m_Right; }
 
 std::shared_ptr<ASTExpressionNode> ASTIfComprehensionExpressionNode::getNext() { return m_Next; }
+
+
+// ASTYieldFromExpressionNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTYieldFromExpressionNode::ASTYieldFromExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<ASTExpressionNode> right)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_YIELD_FROM), m_Op1(op1), m_Op2(op2), m_Right(right) { }
+
+std::shared_ptr<Token> ASTYieldFromExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTYieldFromExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTYieldFromExpressionNode::getRight() { return m_Right; }
+
+
+// ASTYieldExpression /////////////////////////////////////////////////////////////////////////////////////////////////
+ASTYieldExpression::ASTYieldExpression(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTStatementNode> right)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_YIELD), m_Op1(op1), m_Right(right) { }
+
+std::shared_ptr<Token> ASTYieldExpression::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTYieldExpression::getRight() { return m_Right; }
