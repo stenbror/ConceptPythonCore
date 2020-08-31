@@ -521,8 +521,60 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSubscript()
     return std::make_shared<ASTSubscriptionExpressionNode>(start, m_Lexer->getPosition(), left, op1, right, op2, next);
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExprList() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExprList() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto node = m_CurSymbol->kind() == Token::TokenKind::PY_MUL ? parseStarExpr() : parseExpr();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_EXPR_LIST);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            auto op = m_CurSymbol;
+            m_Lexer->advance();
+            res->addNodes(node, op);
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw;
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_IN)
+            {
+                node = m_CurSymbol->kind() == Token::TokenKind::PY_MUL ? parseStarExpr() : parseExpr();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_COMMA) 
+                {
+                    res->addNodes(node, nullptr);
+                }
+            }
+        }
+        return res;
+    }
+    return node; 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto node = parseTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_EXPR_LIST);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            auto op = m_CurSymbol;
+            m_Lexer->advance();
+            res->addNodes(node, op);
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw;
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_SEMICOLON && m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE)
+            {
+                node = parseTest();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_COMMA) 
+                {
+                    res->addNodes(node, nullptr);
+                }
+            }
+        }
+        return res;
+    }
+    return node; 
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIter() { return nullptr; }
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSyncCompFor() { return nullptr; }
