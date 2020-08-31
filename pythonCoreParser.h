@@ -11,7 +11,7 @@ namespace PythonCore::Runtime
     {
         public:
 
-            std::shared_ptr<ASTExpressionNode> parseNamedExpr();
+            std::shared_ptr<ASTExpressionNode> parseNamedTest();
             std::shared_ptr<ASTExpressionNode> parseTest();
             std::shared_ptr<ASTExpressionNode> parseTestNoCond();
             std::shared_ptr<ASTExpressionNode> parseLambdaCommon(bool isConditional);
@@ -30,6 +30,19 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> parsePower();
             std::shared_ptr<ASTExpressionNode> parseAtomExpr();
             std::shared_ptr<ASTExpressionNode> parseAtom();
+            std::shared_ptr<ASTExpressionNode> parseTestListComp();
+            std::shared_ptr<ASTExpressionNode> parseTrailer();
+            std::shared_ptr<ASTExpressionNode> parseSubscriptList();
+            std::shared_ptr<ASTExpressionNode> parseSubscript();
+            std::shared_ptr<ASTExpressionNode> parseExprList();
+            std::shared_ptr<ASTExpressionNode> parseTestList();
+            std::shared_ptr<ASTExpressionNode> parseDictorSetMaker();
+            std::shared_ptr<ASTExpressionNode> parseCompIter();
+            std::shared_ptr<ASTExpressionNode> parseSyncCompFor();
+            std::shared_ptr<ASTExpressionNode> parseCompFor();
+            std::shared_ptr<ASTExpressionNode> parseCompIf();
+            std::shared_ptr<ASTExpressionNode> parseYieldExpr();
+
 
         protected:
             std::shared_ptr<Token> m_CurSymbol;

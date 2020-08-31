@@ -290,3 +290,26 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTStringListExpressionNode
 unsigned int ASTStringListExpressionNode::count() { return (m_StringList.get())->size(); };
 
 void ASTStringListExpressionNode::setEndPosition(unsigned int end) { m_EndPos = end; }
+
+
+// ASTSubscriptionExpressionNode //////////////////////////////////////////////////////////////////////////////////////
+ASTSubscriptionExpressionNode::ASTSubscriptionExpressionNode(   unsigned int start, 
+                                                                unsigned int end,
+                                                                std::shared_ptr<ASTExpressionNode> left,
+                                                                std::shared_ptr<Token> op1,
+                                                                std::shared_ptr<ASTExpressionNode> right,
+                                                                std::shared_ptr<Token> op2,
+                                                                std::shared_ptr<ASTExpressionNode> next
+                                                            )
+                                                            : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_SUBSCRIPTION),
+                                                            m_Left(left), m_Op1(op1), m_Right(right), m_Op2(op2), m_Next(next) {}
+
+std::shared_ptr<ASTExpressionNode> ASTSubscriptionExpressionNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTSubscriptionExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTSubscriptionExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTSubscriptionExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTSubscriptionExpressionNode::getNext() { return m_Next; }
