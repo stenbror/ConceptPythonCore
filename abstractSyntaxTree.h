@@ -253,6 +253,21 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> m_Next;
     };
 
+    class ASTListExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTListExpressionNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind);
+            void addNodes(std::shared_ptr<ASTExpressionNode> node, std::shared_ptr<Token> comma);
+            void addEndPosition(unsigned int end);
+            unsigned int count();
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getCommaNodes();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Nodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_CommaNodes;
+    };
+
 }
 
 #endif

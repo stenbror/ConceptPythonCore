@@ -313,3 +313,29 @@ std::shared_ptr<ASTExpressionNode> ASTSubscriptionExpressionNode::getRight() { r
 std::shared_ptr<Token> ASTSubscriptionExpressionNode::getOperatorTwo() { return m_Op2; }
 
 std::shared_ptr<ASTExpressionNode> ASTSubscriptionExpressionNode::getNext() { return m_Next; }
+
+
+// ASTListExpressionNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTListExpressionNode::ASTListExpressionNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind) : ASTExpressionNode(start, end, kind) {}
+
+void ASTListExpressionNode::addNodes(std::shared_ptr<ASTExpressionNode> node, std::shared_ptr<Token> comma)
+{
+    m_Nodes->push_back(node); m_CommaNodes->push_back(comma);
+}
+
+void ASTListExpressionNode::addEndPosition(unsigned int end)
+{
+    m_EndPos = end;
+}
+
+unsigned int ASTListExpressionNode::count() { return m_Nodes->size(); }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTListExpressionNode::getNodes()
+{
+    return m_Nodes;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTListExpressionNode::getCommaNodes()
+{
+    return m_CommaNodes;
+}
