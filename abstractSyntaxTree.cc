@@ -370,3 +370,27 @@ ASTYieldExpression::ASTYieldExpression(unsigned int start, unsigned int end, std
 std::shared_ptr<Token> ASTYieldExpression::getOperatorOne() { return m_Op1; }
 
 std::shared_ptr<ASTStatementNode> ASTYieldExpression::getRight() { return m_Right; }
+
+
+// ASTSyncCompForExpressionNode ///////////////////////////////////////////////////////////////////////////////////////
+ASTSyncCompForExpressionNode::ASTSyncCompForExpressionNode(   
+                                                            unsigned int start, 
+                                                            unsigned int end, 
+                                                            std::shared_ptr<Token> op1, 
+                                                            std::shared_ptr<ASTExpressionNode> left, 
+                                                            std::shared_ptr<Token> op2, 
+                                                            std::shared_ptr<ASTExpressionNode> right, 
+                                                            std::shared_ptr<ASTExpressionNode> next
+                                                            )
+                                                            : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_SYNC_COMP_FOR), m_Op1(op1), m_Left(left),
+                                                                m_Op2(op2), m_Right(right), m_Next(next) { }
+
+std::shared_ptr<Token> ASTSyncCompForExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTSyncCompForExpressionNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTSyncCompForExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTSyncCompForExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<ASTExpressionNode> ASTSyncCompForExpressionNode::getNext() { return m_Next; }

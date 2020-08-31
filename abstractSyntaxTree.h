@@ -308,6 +308,32 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTStatementNode> m_Right;
     };
 
+    class ASTSyncCompForExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTSyncCompForExpressionNode(   unsigned int start, 
+                                            unsigned int end, 
+                                            std::shared_ptr<Token> op1, 
+                                            std::shared_ptr<ASTExpressionNode> left, 
+                                            std::shared_ptr<Token> op2, 
+                                            std::shared_ptr<ASTExpressionNode> right, 
+                                            std::shared_ptr<ASTExpressionNode> next
+                                        );
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getLeft();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<ASTExpressionNode> getNext();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Left;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<ASTExpressionNode> m_Next;
+
+    };
+
 }
 
 #endif
