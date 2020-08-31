@@ -268,6 +268,20 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_CommaNodes;
     };
 
+    class ASTIfComprehensionExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTIfComprehensionExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<ASTExpressionNode> next);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<ASTExpressionNode> getNext();
+
+        protected:
+            std::shared_ptr<Token> m_Op;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<ASTExpressionNode> m_Next;
+    };
+
 }
 
 #endif

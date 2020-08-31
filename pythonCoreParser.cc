@@ -626,5 +626,18 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompFor()
     return parseSyncCompFor(); 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIf() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIf() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseTestNoCond();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ASYNC || m_CurSymbol->kind() == Token::TokenKind::PY_FOR || m_CurSymbol->kind() == Token::TokenKind::PY_IF)
+    {
+        auto next = parseCompIter();
+        return std::make_shared<ASTIfComprehensionExpressionNode>(start, m_Lexer->getPosition(), op, right, next);
+    }
+    return std::make_shared<ASTIfComprehensionExpressionNode>(start, m_Lexer->getPosition(), op, right, nullptr);
+}
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseYieldExpr() { return nullptr; }

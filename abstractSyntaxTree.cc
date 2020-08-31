@@ -339,3 +339,14 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTListExpressionNode::getC
 {
     return m_CommaNodes;
 }
+
+
+// ASTIfComprehensionExpressionNode ///////////////////////////////////////////////////////////////////////////////////
+ASTIfComprehensionExpressionNode::ASTIfComprehensionExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<ASTExpressionNode> next)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_COMP_IF), m_Op(op), m_Right(right), m_Next(next) { }
+
+std::shared_ptr<Token> ASTIfComprehensionExpressionNode::getOperatorOne() { return m_Op; }
+
+std::shared_ptr<ASTExpressionNode> ASTIfComprehensionExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<ASTExpressionNode> ASTIfComprehensionExpressionNode::getNext() { return m_Next; }
