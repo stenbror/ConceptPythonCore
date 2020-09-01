@@ -492,8 +492,45 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom()
     }
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestListComp() { return nullptr; }
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTrailer() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestListComp() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto node = m_CurSymbol->kind() == Token::TokenKind::PY_MUL ? parseStarExpr() : parseNamedTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ASYNC || m_CurSymbol->kind() == Token::TokenKind::PY_FOR)
+    {
+        auto right = parseCompFor();
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TEST_LIST_COMP);
+        res->addNodes(node, nullptr);
+        res->addNodes(right, nullptr);
+        return res;
+    }
+    else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TEST_LIST_COMP);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            auto op = m_CurSymbol;
+            m_Lexer->advance();
+            res->addNodes(node, op);
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw;
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_BRACKET || m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN)
+            {
+                node = parseSubscript();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_COMMA) 
+                {
+                    res->addNodes(node, nullptr);
+                }
+            }
+        }
+        return res;
+    }
+    return node; 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTrailer() 
+{ 
+    return nullptr; 
+}
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSubscriptList() 
 { 
@@ -607,7 +644,10 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList()
     return node; 
 }
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() { return nullptr; }
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() 
+{ 
+    return nullptr; 
+}
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIter() 
 { 
