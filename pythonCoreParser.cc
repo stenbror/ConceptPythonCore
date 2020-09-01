@@ -415,7 +415,7 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtomExpr()
     if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN || m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_BRACKET || m_CurSymbol->kind() == Token::TokenKind::PY_PERIOD)
     {
         hasTrailer = true;
-        // Handle Trailer here later!
+        right = parseTrailer();
     }
     if (!isAwait && !hasTrailer) return left; 
     return std::make_shared<ASTAtomExpressionNode>(start, m_Lexer->getPosition(), await, left, right);
@@ -529,7 +529,45 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestListComp()
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTrailer() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    auto res = std::make_shared<ASTTrailerListExpressionNode>(start, m_Lexer->getPosition());
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN || m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_BRACKET || m_CurSymbol->kind() == Token::TokenKind::PY_PERIOD)
+    {
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_PERIOD)
+        {
+            auto op1 = m_CurSymbol;
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+            auto op2 = m_CurSymbol;
+            m_Lexer->advance();
+            auto node = std::make_shared<ASTDotNameExpressionNode>(start, m_Lexer->getPosition(), op1, op2);
+            res->addTrailerNode(node);
+        }
+        else if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_BRACKET)
+        {
+            auto op1 = m_CurSymbol;
+            m_Lexer->advance();
+            auto right = parseSubscriptList();
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_BRACKET) throw ;
+            auto op2 = m_CurSymbol;
+            m_Lexer->advance();
+            auto node = std::make_shared<ASTIndexExpressionNode>(start, m_Lexer->getPosition(), op1, right, op2);
+            res->addTrailerNode(node);
+        }
+        else if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN)
+        {
+            auto op1 = m_CurSymbol;
+            m_Lexer->advance();
+            auto right = parseArgList();
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+            auto op2 = m_CurSymbol;
+            m_Lexer->advance();
+            auto node = std::make_shared<ASTCallExpressionNode>(start, m_Lexer->getPosition(), op1, right, op2);
+            res->addTrailerNode(node);   
+        }
+    }
+    res->addEndPosition(m_Lexer->getPosition());
+    return res; 
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseSubscriptList() 
@@ -645,6 +683,16 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList()
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() 
+{ 
+    return nullptr; 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgList() 
+{ 
+    return nullptr; 
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgument() 
 { 
     return nullptr; 
 }

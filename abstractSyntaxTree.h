@@ -30,7 +30,7 @@ namespace PythonCore::Runtime
                 NK_IMPORT_AS_NAMES, NK_GLOBAL_STMT, NK_NONLOCAL_STMT, NK_ASSERT_STMT, NK_DECORATED, NK_DECORATOR, NK_DECORATORS,
                 NK_ASYNC_FUNCDEF, NK_FUNCDEF, NK_PARAMETERS, NK_CLASS, NK_ARGLIST, NK_ARGUMENT, NK_TYPED_ARGS_LIST, NK_VAR_ARGS_LIST,
                 NK_TFP_DEF, NK_VFP_DEF, NK_STMT_LIST, NK_SINGLE_INPUT, NK_FILE_INPUT, NK_EVAL_INPUT, NK_FUNC_BODY_SUITE,
-                NK_FUNC_TYPE_INPUT, NK_FUNC_TYPE, NK_TYPE_LIST, NK_STRING_LIST
+                NK_FUNC_TYPE_INPUT, NK_FUNC_TYPE, NK_TYPE_LIST, NK_STRING_LIST, NK_DOT_NAME, NK_CALL, NK_INDEN
             };
 
         public:
@@ -331,6 +331,62 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op2;
             std::shared_ptr<ASTExpressionNode> m_Right;
             std::shared_ptr<ASTExpressionNode> m_Next;
+
+    };
+
+    class ASTTrailerListExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTTrailerListExpressionNode(unsigned int start, unsigned int end);
+            void addTrailerNode(std::shared_ptr<ASTExpressionNode> node);
+            unsigned int count();
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> getNodes();
+            void addEndPosition(unsigned int end);
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Nodes;
+    };
+
+    class ASTDotNameExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTDotNameExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+
+    };
+
+    class ASTCallExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTCallExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<Token> op2);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<Token> m_Op2;
+
+    };
+
+    class ASTIndexExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTIndexExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<Token> op2);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<Token> m_Op2;
 
     };
 

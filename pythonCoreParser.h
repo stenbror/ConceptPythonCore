@@ -40,6 +40,8 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> parseExprList();
             std::shared_ptr<ASTExpressionNode> parseTestList();
             std::shared_ptr<ASTExpressionNode> parseDictorSetMaker();
+            std::shared_ptr<ASTExpressionNode> parseArgList();
+            std::shared_ptr<ASTExpressionNode> parseArgument();
             std::shared_ptr<ASTExpressionNode> parseCompIter();
             std::shared_ptr<ASTExpressionNode> parseSyncCompFor();
             std::shared_ptr<ASTExpressionNode> parseCompFor();

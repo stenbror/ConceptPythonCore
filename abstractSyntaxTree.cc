@@ -394,3 +394,50 @@ std::shared_ptr<Token> ASTSyncCompForExpressionNode::getOperatorTwo() { return m
 std::shared_ptr<ASTExpressionNode> ASTSyncCompForExpressionNode::getRight() { return m_Right; }
 
 std::shared_ptr<ASTExpressionNode> ASTSyncCompForExpressionNode::getNext() { return m_Next; }
+
+
+// ASTTrailerListExpressionNode ///////////////////////////////////////////////////////////////////////////////////////
+ASTTrailerListExpressionNode::ASTTrailerListExpressionNode(unsigned int start, unsigned int end)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_TRAILER) { }
+
+void ASTTrailerListExpressionNode::addTrailerNode(std::shared_ptr<ASTExpressionNode> node) { m_Nodes->push_back(node); }
+
+unsigned int ASTTrailerListExpressionNode::count() { return m_Nodes->size(); }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTTrailerListExpressionNode::getNodes() { return m_Nodes; }
+
+void ASTTrailerListExpressionNode::addEndPosition(unsigned int end)
+{
+    m_EndPos = end;
+}
+
+
+// ASTDotNameExpressionNode ///////////////////////////////////////////////////////////////////////////////////////////
+ASTDotNameExpressionNode::ASTDotNameExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_DOT_NAME), m_Op1(op1), m_Op2(op2) { }
+
+std::shared_ptr<Token> ASTDotNameExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTDotNameExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTCallExpressionNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTCallExpressionNode::ASTCallExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<Token> op2)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_CALL), m_Op1(op1), m_Right(right), m_Op2(op2) {}
+
+std::shared_ptr<Token> ASTCallExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTCallExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTCallExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTIndexExpressionNode /////////////////////////////////////////////////////////////////////////////////////////////
+ASTIndexExpressionNode::ASTIndexExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<Token> op2)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_CALL), m_Op1(op1), m_Right(right), m_Op2(op2) {}
+
+std::shared_ptr<Token> ASTIndexExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTIndexExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTIndexExpressionNode::getOperatorTwo() { return m_Op2; }
