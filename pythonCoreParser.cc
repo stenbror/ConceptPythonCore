@@ -691,7 +691,28 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker()
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgList() 
 { 
     unsigned int start = m_Lexer->getPosition();
-    return nullptr; 
+    auto node = parseArgument();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        auto res = std::make_shared<ASTListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_ARGLIST);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            auto op = m_CurSymbol;
+            m_Lexer->advance();
+            res->addNodes(node, op);
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw;
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN)
+            {
+                node = parseArgument();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_COMMA) 
+                {
+                    res->addNodes(node, nullptr);
+                }
+            }
+        }
+        return res;
+    }
+    return node; 
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgument() 
