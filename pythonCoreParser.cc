@@ -684,17 +684,70 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList()
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() 
 { 
+    unsigned int start = m_Lexer->getPosition();
     return nullptr; 
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgList() 
 { 
+    unsigned int start = m_Lexer->getPosition();
     return nullptr; 
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgument() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+    {
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+        auto op2 = m_CurSymbol;
+        m_Lexer->advance();
+        return std::make_shared<ASTListArgumentExpressionNode>(start, m_Lexer->getPosition(), op1, op2);
+    }
+    else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+    {
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+        auto op2 = m_CurSymbol;
+        m_Lexer->advance();
+        return std::make_shared<ASTKWArgumentExpressionNode>(start, m_Lexer->getPosition(), op1, op2);
+    }
+    else
+    {
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_ASYNC || m_CurSymbol->kind() == Token::TokenKind::PY_FOR)
+        {
+            auto right = parseCompFor();
+            return std::make_shared<ASTCompArgumentExpressionNode>(start, m_Lexer->getPosition(), op1, right);
+        }
+        else if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON_ASSIGN)
+        {
+            auto op2 = m_CurSymbol;
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+            auto op3 = m_CurSymbol;
+            m_Lexer->advance();
+            return std::make_shared<ASTColonAssignArgumentExpressionNode>(start, m_Lexer->getPosition(), op1, op2, op3);
+        }
+        else if (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+        {
+            auto op2 = m_CurSymbol;
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+            auto op3 = m_CurSymbol;
+            m_Lexer->advance();
+            return std::make_shared<ASTAssignArgumentExpressionNode>(start, m_Lexer->getPosition(), op1, op2, op3);
+        }
+        else
+        {
+            return std::make_shared<ASTArgumentExpressionNode>(start, m_Lexer->getPosition(), op1);
+        }  
+    }
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseCompIter() 

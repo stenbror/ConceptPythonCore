@@ -30,7 +30,8 @@ namespace PythonCore::Runtime
                 NK_IMPORT_AS_NAMES, NK_GLOBAL_STMT, NK_NONLOCAL_STMT, NK_ASSERT_STMT, NK_DECORATED, NK_DECORATOR, NK_DECORATORS,
                 NK_ASYNC_FUNCDEF, NK_FUNCDEF, NK_PARAMETERS, NK_CLASS, NK_ARGLIST, NK_ARGUMENT, NK_TYPED_ARGS_LIST, NK_VAR_ARGS_LIST,
                 NK_TFP_DEF, NK_VFP_DEF, NK_STMT_LIST, NK_SINGLE_INPUT, NK_FILE_INPUT, NK_EVAL_INPUT, NK_FUNC_BODY_SUITE,
-                NK_FUNC_TYPE_INPUT, NK_FUNC_TYPE, NK_TYPE_LIST, NK_STRING_LIST, NK_DOT_NAME, NK_CALL, NK_INDEN
+                NK_FUNC_TYPE_INPUT, NK_FUNC_TYPE, NK_TYPE_LIST, NK_STRING_LIST, NK_DOT_NAME, NK_CALL, NK_INDEN, NK_LIST_ARGUMENT,
+                NK_KW_ARGUMENT, NK_COMP_ARGUMENT, NK_COLON_ASSIGN_ARGUMENT, NK_ASSIGN_ARGUMENT
             };
 
         public:
@@ -389,6 +390,81 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op2;
 
     };
+
+    class ASTListArgumentExpressionNode : public ASTExpressionNode 
+    {
+        public:
+            ASTListArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+    };
+
+    class ASTKWArgumentExpressionNode : public ASTExpressionNode 
+    {
+        public:
+            ASTKWArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+    };
+
+    class ASTCompArgumentExpressionNode : public ASTExpressionNode 
+    {
+        public:
+            ASTCompArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTExpressionNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+    };
+
+    class ASTColonAssignArgumentExpressionNode : public ASTExpressionNode 
+    {
+        public:
+            ASTColonAssignArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<Token> op3);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<Token> getOperatorThree();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<Token> m_Op3;
+    };
+
+    class ASTAssignArgumentExpressionNode : public ASTExpressionNode 
+    {
+        public:
+            ASTAssignArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<Token> op3);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<Token> getOperatorThree();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<Token> m_Op3;
+    };
+
+    class ASTArgumentExpressionNode : public ASTExpressionNode 
+    {
+        public:
+            ASTArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1);
+            std::shared_ptr<Token> getOperatorOne();
+        
+        protected:
+            std::shared_ptr<Token> m_Op1;
+    };
+
 
 }
 

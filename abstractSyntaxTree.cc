@@ -441,3 +441,59 @@ std::shared_ptr<Token> ASTIndexExpressionNode::getOperatorOne() { return m_Op1; 
 std::shared_ptr<ASTExpressionNode> ASTIndexExpressionNode::getRight() { return m_Right; }
 
 std::shared_ptr<Token> ASTIndexExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTListArgumentExpressionNode //////////////////////////////////////////////////////////////////////////////////////
+ASTListArgumentExpressionNode::ASTListArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_LIST_ARGUMENT), m_Op1(op1), m_Op2(op2) { }
+
+std::shared_ptr<Token> ASTListArgumentExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTListArgumentExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTKWArgumentExpressionNode ////////////////////////////////////////////////////////////////////////////////////////
+ASTKWArgumentExpressionNode::ASTKWArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_KW_ARGUMENT), m_Op1(op1), m_Op2(op2) { }
+
+std::shared_ptr<Token> ASTKWArgumentExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTKWArgumentExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTCompArgumentExpressionNode //////////////////////////////////////////////////////////////////////////////////////
+ASTCompArgumentExpressionNode::ASTCompArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTExpressionNode> right)
+    : ASTExpressionNode(start, end, ASTNode::NodeKind::NK_COMP_ARGUMENT), m_Op1(op1), m_Right(right) { }
+
+std::shared_ptr<Token> ASTCompArgumentExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTCompArgumentExpressionNode::getRight() { return m_Right; }
+
+
+// ASTColonAssignArgumentExpressionNode ///////////////////////////////////////////////////////////////////////////////
+ASTColonAssignArgumentExpressionNode::ASTColonAssignArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<Token> op3)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_COLON_ASSIGN_ARGUMENT), m_Op1(op1), m_Op2(op2), m_Op3(op3) {}
+
+std::shared_ptr<Token> ASTColonAssignArgumentExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTColonAssignArgumentExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTColonAssignArgumentExpressionNode::getOperatorThree() { return m_Op3; }
+
+
+// ASTAssignArgumentExpressionNode ////////////////////////////////////////////////////////////////////////////////////
+ASTAssignArgumentExpressionNode::ASTAssignArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<Token> op3)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_ASSIGN_ARGUMENT), m_Op1(op1), m_Op2(op2), m_Op3(op3) {}
+
+std::shared_ptr<Token> ASTAssignArgumentExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTAssignArgumentExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTAssignArgumentExpressionNode::getOperatorThree() { return m_Op3; }
+
+
+// ASTArgumentExpressionNode //////////////////////////////////////////////////////////////////////////////////////////
+ASTArgumentExpressionNode::ASTArgumentExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1) 
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_ARGUMENT), m_Op1(op1) { }
+
+std::shared_ptr<Token> ASTArgumentExpressionNode::getOperatorOne() { return m_Op1; }
