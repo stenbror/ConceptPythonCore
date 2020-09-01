@@ -67,6 +67,13 @@ bool ASTNode::isExpressionNode()
         case NodeKind::NK_COMP_IF:
         case NodeKind::NK_YIELD:
         case NodeKind::NK_YIELD_FROM:
+        case NodeKind::NK_ARGLIST:
+        case NodeKind::NK_ARGUMENT:
+        case NodeKind::NK_LIST_ARGUMENT:
+        case NodeKind::NK_KW_ARGUMENT:
+        case NodeKind::NK_COMP_ARGUMENT:
+        case NodeKind::NK_COLON_ASSIGN_ARGUMENT:
+        case NodeKind::NK_ASSIGN_ARGUMENT:
             return true;
         default:
             return false;
@@ -129,8 +136,6 @@ bool ASTNode::isStatementNode()
         case NodeKind::NK_FUNCDEF:
         case NodeKind::NK_PARAMETERS:
         case NodeKind::NK_CLASS:
-        case NodeKind::NK_ARGLIST:
-        case NodeKind::NK_ARGUMENT:
         case NodeKind::NK_TYPED_ARGS_LIST:
         case NodeKind::NK_VAR_ARGS_LIST:
         case NodeKind::NK_TFP_DEF:
