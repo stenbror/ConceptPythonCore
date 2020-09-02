@@ -518,3 +518,20 @@ std::shared_ptr<Token> ASTCompoundLiteralExpressionNode::getOperatorOne() { retu
 std::shared_ptr<ASTExpressionNode> ASTCompoundLiteralExpressionNode::getRight() { return m_Right; }
 
 std::shared_ptr<Token> ASTCompoundLiteralExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTDictionarySetDataExpressionNode /////////////////////////////////////////////////////////////////////////////////
+ASTDictionarySetDataExpressionNode::ASTDictionarySetDataExpressionNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind)
+    :   ASTExpressionNode(start, end, kind) { }
+
+void ASTDictionarySetDataExpressionNode::addEndPosition(unsigned int end) { m_EndPos = end; }
+
+unsigned int ASTDictionarySetDataExpressionNode::count() { return m_Keys->size(); }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTDictionarySetDataExpressionNode::getKeys() { return m_Keys; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDictionarySetDataExpressionNode::getColons() { return m_Colons; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTDictionarySetDataExpressionNode::getValues() { return m_Values;}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDictionarySetDataExpressionNode::getCommas() { return m_Commas; }

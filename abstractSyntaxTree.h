@@ -484,6 +484,24 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op2;
     };
 
+    class ASTDictionarySetDataExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTDictionarySetDataExpressionNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind);
+            void addEndPosition(unsigned int end);
+            unsigned int count();
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> getKeys();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getColons();
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> getValues();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getCommas();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Keys;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Colons;
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Values;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Commas;
+    };
+
 
 }
 
