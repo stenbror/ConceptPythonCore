@@ -789,12 +789,14 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker()
 
             if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
             {
+                if (isDictionary) throw ;
                 key = parseStarExpr();
                 res->addSetEntry(key);
                 isDictionary = false;
             }
             else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
             {
+                if (!isDictionary) throw ;
                 auto op1 = m_CurSymbol;
                 m_Lexer->advance();
                 auto right = parseExpr();
@@ -806,6 +808,7 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker()
                 key = parseTest();
                 if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON)
                 {
+                    if (!isDictionary) throw ;
                     auto op = m_CurSymbol;
                     m_Lexer->advance();
                     auto value = parseTest();
@@ -813,6 +816,7 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker()
                 }
                 else
                 {
+                    if (isDictionary) throw ;
                     res->addSetEntry(key);
                     isDictionary = false;
                 }
