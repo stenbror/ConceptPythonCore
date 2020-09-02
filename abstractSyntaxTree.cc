@@ -526,6 +526,17 @@ ASTDictionarySetDataExpressionNode::ASTDictionarySetDataExpressionNode(unsigned 
 
 void ASTDictionarySetDataExpressionNode::addEndPosition(unsigned int end) { m_EndPos = end; }
 
+void ASTDictionarySetDataExpressionNode::addSetEntry(std::shared_ptr<ASTExpressionNode> left) { m_Keys->push_back(left); }
+
+void ASTDictionarySetDataExpressionNode::addDictionaryEntry(std::shared_ptr<ASTExpressionNode> left, std::shared_ptr<Token> colon, std::shared_ptr<ASTExpressionNode> right)
+{
+    m_Keys->push_back(left);
+    m_Colons->push_back(colon);
+    m_Values->push_back(right);
+}
+
+void ASTDictionarySetDataExpressionNode::addComma(std::shared_ptr<Token> comma) { m_Commas->push_back(comma); }
+
 unsigned int ASTDictionarySetDataExpressionNode::count() { return m_Keys->size(); }
 
 std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTDictionarySetDataExpressionNode::getKeys() { return m_Keys; }

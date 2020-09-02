@@ -730,7 +730,97 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTestList()
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseDictorSetMaker() 
 { 
     unsigned int start = m_Lexer->getPosition();
-    return nullptr; 
+    std::shared_ptr<ASTExpressionNode> key = nullptr;
+    std::shared_ptr<Token> colon = nullptr;
+    std::shared_ptr<ASTExpressionNode> values = nullptr;
+    std::shared_ptr<Token> Comma = nullptr;
+    std::shared_ptr<ASTDictionarySetDataExpressionNode> res = nullptr;
+    bool isDictionary = true;
+
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+    {
+        key = parseStarExpr();
+        res = std::make_shared<ASTDictionarySetDataExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_SET_LIST);
+        res->addSetEntry(key);
+        isDictionary = false;
+    }
+    else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+    {
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseExpr();
+        key = std::make_shared<ASTUnaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_POWER, op1, right);
+        res = std::make_shared<ASTDictionarySetDataExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_KV_LIST);
+        res->addSetEntry(key); // Yes, even though we are dictionary.
+    }
+    else
+    {
+        key = parseTest();
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON)
+        {
+            auto op = m_CurSymbol;
+            m_Lexer->advance();
+            auto value = parseTest();
+            res = std::make_shared<ASTDictionarySetDataExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_KV_LIST);
+            res->addDictionaryEntry(key, op, value);
+        }
+        else
+        {
+            res = std::make_shared<ASTDictionarySetDataExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_SET_LIST);
+            res->addSetEntry(key);
+            isDictionary = false;
+        }
+    }
+
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ASYNC || m_CurSymbol->kind() == Token::TokenKind::PY_FOR)
+    {
+        auto node = parseCompFor();
+        res->addSetEntry(key); // Yes, regardless of dictionary or set.
+    }
+    else
+    {
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            Comma = m_CurSymbol;
+            m_Lexer->advance();
+            res->addComma(Comma);
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_RIGHT_CURLY) continue;
+
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+            {
+                key = parseStarExpr();
+                res->addSetEntry(key);
+                isDictionary = false;
+            }
+            else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = parseExpr();
+                key = std::make_shared<ASTUnaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_POWER, op1, right);
+                res->addSetEntry(key); // Yes, even though we are dictionary.
+            }
+            else
+            {
+                key = parseTest();
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON)
+                {
+                    auto op = m_CurSymbol;
+                    m_Lexer->advance();
+                    auto value = parseTest();
+                    res->addDictionaryEntry(key, op, value);
+                }
+                else
+                {
+                    res->addSetEntry(key);
+                    isDictionary = false;
+                }
+            }
+        }
+    }
+    res->addEndPosition(m_Lexer->getPosition());
+    return res; 
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseArgList() 
