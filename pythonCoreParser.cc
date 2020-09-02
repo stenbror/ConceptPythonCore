@@ -528,7 +528,10 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom()
                 if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_CURLY) throw ;
                 auto op2 = m_CurSymbol;
                 m_Lexer->advance();
-                return std::make_shared<ASTCompoundLiteralExpressionNode>(start, m_Lexer->getPosition(), right->kind(), op1, right, op2); // Handle kind ? Dictionary : Set
+                return std::make_shared<ASTCompoundLiteralExpressionNode>(  start, m_Lexer->getPosition(), 
+                                                                            right->kind() == ASTNode::NodeKind::NK_KV_LIST ? 
+                                                                                ASTNode::NodeKind::NK_DICTIONARY : ASTNode::NodeKind::NK_SET
+                                                                            , op1, right, op2);
             }
         default:    throw ;
     }
