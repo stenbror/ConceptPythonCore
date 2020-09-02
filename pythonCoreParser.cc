@@ -488,6 +488,48 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseAtom()
                 return res;
             }
             break;
+        case Token::TokenKind::PY_LEFT_PAREN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                std::shared_ptr<ASTExpressionNode> right = nullptr;
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) 
+                {
+                    right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestListComp();
+                }
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+                auto op2 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTCompoundLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TUPLE, op1, right, op2);
+            }
+        case Token::TokenKind::PY_LEFT_BRACKET:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                std::shared_ptr<ASTExpressionNode> right = nullptr;
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_BRACKET) 
+                {
+                    right = parseYieldExpr();
+                }
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_BRACKET) throw ;
+                auto op2 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTCompoundLiteralExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_LIST, op1, right, op2);
+            }
+        case Token::TokenKind::PY_LEFT_CURLY:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                std::shared_ptr<ASTExpressionNode> right = nullptr;
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_CURLY) 
+                {
+                    right = parseDictorSetMaker();
+                }
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_CURLY) throw ;
+                auto op2 = m_CurSymbol;
+                m_Lexer->advance();
+                return std::make_shared<ASTCompoundLiteralExpressionNode>(start, m_Lexer->getPosition(), right->kind(), op1, right, op2); // Handle kind ? Dictionary : Set
+            }
         default:    throw ;
     }
 }

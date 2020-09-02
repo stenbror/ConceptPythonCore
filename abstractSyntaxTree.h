@@ -465,6 +465,25 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op1;
     };
 
+    class ASTCompoundLiteralExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTCompoundLiteralExpressionNode(   unsigned int start,
+                                                unsigned int end,
+                                                ASTNode::NodeKind kind,
+                                                std::shared_ptr<Token> op1,
+                                                std::shared_ptr<ASTExpressionNode> right,
+                                                std::shared_ptr<Token> op2);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<Token> m_Op2;
+    };
+
 
 }
 

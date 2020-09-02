@@ -502,3 +502,19 @@ ASTArgumentExpressionNode::ASTArgumentExpressionNode(unsigned int start, unsigne
     :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_ARGUMENT), m_Op1(op1) { }
 
 std::shared_ptr<Token> ASTArgumentExpressionNode::getOperatorOne() { return m_Op1; }
+
+
+// ASTCompoundLiteralExpressionNode ///////////////////////////////////////////////////////////////////////////////////
+ASTCompoundLiteralExpressionNode::ASTCompoundLiteralExpressionNode( unsigned int start,
+                                                                    unsigned int end,
+                                                                    ASTNode::NodeKind kind,
+                                                                    std::shared_ptr<Token> op1,
+                                                                    std::shared_ptr<ASTExpressionNode> right,
+                                                                    std::shared_ptr<Token> op2) 
+    :   ASTExpressionNode(start, end, kind), m_Op1(op1), m_Right(right), m_Op2(op2) {}
+
+std::shared_ptr<Token> ASTCompoundLiteralExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTCompoundLiteralExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTCompoundLiteralExpressionNode::getOperatorTwo() { return m_Op2; }
