@@ -74,6 +74,7 @@ bool ASTNode::isExpressionNode()
         case NodeKind::NK_COMP_ARGUMENT:
         case NodeKind::NK_COLON_ASSIGN_ARGUMENT:
         case NodeKind::NK_ASSIGN_ARGUMENT:
+        case NodeKind::NK_WITH_ITEM:
             return true;
         default:
             return false;
@@ -94,7 +95,6 @@ bool ASTNode::isStatementNode()
         case NodeKind::NK_EXCEPT_STMT:
         case NodeKind::NK_FINALLY_STMT:
         case NodeKind::NK_WITH_STMT:
-        case NodeKind::NK_WITH_ITEM:
         case NodeKind::NK_SUITE:
         case NodeKind::NK_PLUS_ASSIGN:
         case NodeKind::NK_MINUS_ASSIGN: 

@@ -23,7 +23,7 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTStatementNode> parseForStmt();
             std::shared_ptr<ASTStatementNode> parseTryStmt();
             std::shared_ptr<ASTStatementNode> parseWithStmt();
-            std::shared_ptr<ASTStatementNode> parseWithItem();
+            std::shared_ptr<ASTExpressionNode> parseWithItem();
             std::shared_ptr<ASTStatementNode> parseExceptClause();
             std::shared_ptr<ASTStatementNode> parseSuite();
 

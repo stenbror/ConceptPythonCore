@@ -117,7 +117,21 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt()
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() { return nullptr; }
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithItem() { return nullptr; }
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseWithItem() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_AS)
+    {
+        auto op = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseExpr();
+        return std::make_shared<ASTBinaryExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_WITH_ITEM, left, op, right);
+    }
+    return left; 
+}
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseExceptClause() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite() { return nullptr; }
 
