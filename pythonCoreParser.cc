@@ -36,7 +36,10 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt()
     }
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt() 
+{ 
+    return nullptr; 
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt() 
 { 
@@ -115,8 +118,32 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt()
     return res; 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() 
+{ 
+    return nullptr; 
+}
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas;
+    nodes->push_back(parseWithItem());
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        commas->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        nodes->push_back(parseWithItem());
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op2 = m_CurSymbol;
+    m_Lexer->advance();
+    // Handle TypeComment here later!
+    auto right = parseStmt();
+    return std::make_shared<ASTWithStatementNode>(start, m_Lexer->getPosition(), op1, nodes, commas, op2, nullptr, right); 
+}
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseWithItem() 
 { 
@@ -132,8 +159,15 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseWithItem()
     return left; 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseExceptClause() { return nullptr; }
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseExceptClause() 
+{ 
+    return nullptr; 
+}
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite() 
+{ 
+    return nullptr; 
+}
 
 // Expression rules ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

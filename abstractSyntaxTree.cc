@@ -667,3 +667,28 @@ std::shared_ptr<ASTStatementNode> ASTForStatementNode::getNext() { return m_Next
 std::shared_ptr<ASTStatementNode> ASTForStatementNode::getElseNode() { return m_Else; }
 
 void ASTForStatementNode::addEndPosition(unsigned int end) { m_EndPos = end; }
+
+
+// ASTWithStatementNode ///////////////////////////////////////////////////////////////////////////////////////////////
+ASTWithStatementNode::ASTWithStatementNode( unsigned int start,
+                                            unsigned int end,
+                                            std::shared_ptr<Token> op1,
+                                            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes,
+                                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas,
+                                            std::shared_ptr<Token> op2,
+                                            std::shared_ptr<ASTTypeCommentNode> comment,
+                                            std::shared_ptr<ASTStatementNode> right
+                                          )
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_WITH_STMT), m_Op1(op1), m_Nodes(nodes), m_Commas(commas), m_Op2(op2), m_Comment(comment), m_Right(right) { }
+
+std::shared_ptr<Token> ASTWithStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTWithStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTWithStatementNode::getCommas() { return m_Commas; }
+
+std::shared_ptr<Token> ASTWithStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTTypeCommentNode> ASTWithStatementNode::getTypeComment() { return m_Comment; }
+
+std::shared_ptr<ASTStatementNode> ASTWithStatementNode::getRight() { return m_Right; }
