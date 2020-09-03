@@ -96,7 +96,23 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt()
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    auto left = parseExprList();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_IN) throw ;
+    auto op2 = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseTestList();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op3 = m_CurSymbol;
+    m_Lexer->advance();
+    // Handle TypeComment here later.
+    auto next = parseStmt();
+    auto res = std::make_shared<ASTForStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right, op3, nullptr, next);
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ELSE) res->addElseStatement(parseElseStmt());
+    res->addEndPosition(m_Lexer->getPosition());
+    return res; 
 }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
