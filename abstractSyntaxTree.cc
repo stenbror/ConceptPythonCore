@@ -546,3 +546,64 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDictionarySetDataExpress
 std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTDictionarySetDataExpressionNode::getValues() { return m_Values;}
 
 std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDictionarySetDataExpressionNode::getCommas() { return m_Commas; }
+
+
+// ASTIfStatementNode /////////////////////////////////////////////////////////////////////////////////////////////////
+ASTIfStatementNode::ASTIfStatementNode( unsigned int start, 
+                                        unsigned int end, 
+                                        std::shared_ptr<Token> op1, 
+                                        std::shared_ptr<ASTExpressionNode> left, 
+                                        std::shared_ptr<Token> op2, 
+                                        std::shared_ptr<ASTStatementNode> right
+                                      ) : ASTStatementNode(start, end, ASTNode::NodeKind::NK_IF_STMT), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right) {}
+
+void ASTIfStatementNode::addElifStatement(std::shared_ptr<ASTStatementNode> node) { m_Elifs->push_back(node); }
+
+void ASTIfStatementNode::addElseStatement(std::shared_ptr<ASTStatementNode> node) { m_Else = node; }
+
+std::shared_ptr<Token> ASTIfStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTIfStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTIfStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTIfStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTIfStatementNode::getElifsNodes() { return m_Elifs; }
+
+std::shared_ptr<ASTStatementNode> ASTIfStatementNode::getElseNode() { return m_Else; }
+
+unsigned int ASTIfStatementNode::count() { return m_Elifs->size(); }
+
+
+// ASTElifStatementNode ///////////////////////////////////////////////////////////////////////////////////////////////
+ASTElifStatementNode::ASTElifStatementNode( unsigned int start, 
+                                        unsigned int end, 
+                                        std::shared_ptr<Token> op1, 
+                                        std::shared_ptr<ASTExpressionNode> left, 
+                                        std::shared_ptr<Token> op2, 
+                                        std::shared_ptr<ASTStatementNode> right
+                                      ) : ASTStatementNode(start, end, ASTNode::NodeKind::NK_ELIF_STMT), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right) {}
+
+std::shared_ptr<Token> ASTElifStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTElifStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTElifStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTElifStatementNode::getRight() { return m_Right; }
+
+
+// ASTElseStatementNode ///////////////////////////////////////////////////////////////////////////////////////////////
+ASTElseStatementNode::ASTElseStatementNode( unsigned int start, 
+                                            unsigned int end, 
+                                            std::shared_ptr<Token> op1, 
+                                            std::shared_ptr<Token> op2, 
+                                            std::shared_ptr<ASTStatementNode> right
+                                          ) : ASTStatementNode(start, end, ASTNode::NodeKind::NK_ELSE_STMT), m_Op1(op1), m_Op2(op2), m_Right(right) {}
+
+std::shared_ptr<Token> ASTElseStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTElseStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTElseStatementNode::getRight() { return m_Right; }

@@ -2,13 +2,38 @@
 
 using namespace PythonCore::Runtime;
 
+// Statement rules ////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
 
 
 
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt() 
+{ 
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_ASYNC:
+            return parseAsyncStmt();
+        case Token::TokenKind::PY_IF:
+            return parseIfStmt();
+        case Token::TokenKind::PY_WHILE:
+            return parseWhileStmt();
+        case Token::TokenKind::PY_FOR:
+            return parseForStmt();
+        case Token::TokenKind::PY_TRY:
+            return parseTryStmt();
+        case Token::TokenKind::PY_WITH:
+            return parseWithStmt();
+        case Token::TokenKind::PY_MATRICE:
+        case Token::TokenKind::PY_DEF:
+        case Token::TokenKind::PY_CLASS:
+            return nullptr;
+        default:    throw ;
+    }
+}
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseElseStmt() { return nullptr; }
