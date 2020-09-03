@@ -692,3 +692,12 @@ std::shared_ptr<Token> ASTWithStatementNode::getOperatorTwo() { return m_Op2; }
 std::shared_ptr<ASTTypeCommentNode> ASTWithStatementNode::getTypeComment() { return m_Comment; }
 
 std::shared_ptr<ASTStatementNode> ASTWithStatementNode::getRight() { return m_Right; }
+
+
+// ASTAsyncStatementNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTAsyncStatementNode::ASTAsyncStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_ASYNC_STMT), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<Token> ASTAsyncStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTAsyncStatementNode::getRight() { return m_Right; }

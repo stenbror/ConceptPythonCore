@@ -5,6 +5,8 @@ using namespace PythonCore::Runtime;
 // Statement rules ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef() { return nullptr; }
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() { return nullptr; }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
@@ -38,7 +40,29 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt()
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_FOR:
+            {
+                auto right = parseForStmt();
+                return std::make_shared<ASTAsyncStatementNode>(start, m_Lexer->getPosition(), op, right);
+            }
+        case Token::TokenKind::PY_WITH:
+            {
+                auto right = parseWithStmt();
+                return std::make_shared<ASTAsyncStatementNode>(start, m_Lexer->getPosition(), op, right);
+            }
+        case Token::TokenKind::PY_DEF:
+            {
+                auto right = parseFuncDef();
+                return std::make_shared<ASTAsyncStatementNode>(start, m_Lexer->getPosition(), op, right);
+            }
+        default:
+            throw ;
+    }
 }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt() 
