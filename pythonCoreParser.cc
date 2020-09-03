@@ -75,11 +75,25 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseElseStmt()
     auto op2 = m_CurSymbol;
     m_Lexer->advance();
     auto right = parseStmt();
-    auto res = std::make_shared<ASTElseStatementNode>(start, m_Lexer->getPosition(), op1, op2, right);
+    return std::make_shared<ASTElseStatementNode>(start, m_Lexer->getPosition(), op1, op2, right);
+}
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    auto left = parseNamedTest();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op2 = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseStmt();
+    auto res = std::make_shared<ASTWhileStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ELSE) res->addElseStatement(parseElseStmt());
+    res->addEndPosition(m_Lexer->getPosition());
     return res; 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() { return nullptr; }

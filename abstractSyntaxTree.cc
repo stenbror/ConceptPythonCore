@@ -609,3 +609,27 @@ std::shared_ptr<Token> ASTElseStatementNode::getOperatorOne() { return m_Op1; }
 std::shared_ptr<Token> ASTElseStatementNode::getOperatorTwo() { return m_Op2; }
 
 std::shared_ptr<ASTStatementNode> ASTElseStatementNode::getRight() { return m_Right; }
+
+
+// ASTWhileStatementNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTWhileStatementNode::ASTWhileStatementNode(   unsigned int start, 
+                                                unsigned int end, 
+                                                std::shared_ptr<Token> op1, 
+                                                std::shared_ptr<ASTExpressionNode> left, 
+                                                std::shared_ptr<Token> op2, 
+                                                std::shared_ptr<ASTStatementNode> right
+                                            ) : ASTStatementNode(start, end, ASTNode::NodeKind::NK_WHILE_STMT), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right) {}
+
+void ASTWhileStatementNode::addElseStatement(std::shared_ptr<ASTStatementNode> node) { m_Else = node; }
+
+std::shared_ptr<Token> ASTWhileStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTWhileStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTWhileStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTWhileStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<ASTStatementNode> ASTWhileStatementNode::getElseNode() { return m_Else; }
+
+void ASTWhileStatementNode::addEndPosition(unsigned int end) { m_EndPos = end; }
