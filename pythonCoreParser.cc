@@ -94,7 +94,11 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt()
     return res; 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt() 
+{ 
+    return nullptr; 
+}
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithItem() { return nullptr; }

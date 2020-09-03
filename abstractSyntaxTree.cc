@@ -633,3 +633,37 @@ std::shared_ptr<ASTStatementNode> ASTWhileStatementNode::getRight() { return m_R
 std::shared_ptr<ASTStatementNode> ASTWhileStatementNode::getElseNode() { return m_Else; }
 
 void ASTWhileStatementNode::addEndPosition(unsigned int end) { m_EndPos = end; }
+
+
+// ASTForStatementNode ////////////////////////////////////////////////////////////////////////////////////////////////
+ASTForStatementNode::ASTForStatementNode(   unsigned int start,
+                                            unsigned int end,
+                                            std::shared_ptr<Token> op1,
+                                            std::shared_ptr<ASTExpressionNode> left,
+                                            std::shared_ptr<Token> op2,
+                                            std::shared_ptr<ASTExpressionNode> right,
+                                            std::shared_ptr<Token> op3,
+                                            std::shared_ptr<ASTTypeCommentNode> comment,
+                                            std::shared_ptr<ASTStatementNode> next
+                                        )
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_FOR_STMT), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right), m_Op3(op3), m_Comment(comment), m_Next(next) { }
+
+void ASTForStatementNode::addElseStatement(std::shared_ptr<ASTStatementNode> node) { m_Else = node; }
+
+std::shared_ptr<Token> ASTForStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTForStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTForStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTForStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTForStatementNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<ASTTypeCommentNode> ASTForStatementNode::getTypeComment() { return m_Comment; }
+
+std::shared_ptr<ASTStatementNode> ASTForStatementNode::getNext() { return m_Next; }
+
+std::shared_ptr<ASTStatementNode> ASTForStatementNode::getElseNode() { return m_Else; }
+
+void ASTForStatementNode::addEndPosition(unsigned int end) { m_EndPos = end; }

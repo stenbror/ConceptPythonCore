@@ -62,6 +62,10 @@ namespace PythonCore::Runtime
             ASTStatementNode(unsigned int start, unsigned int end, NodeKind kind) : ASTNode(start, end, kind) {};
     };
 
+    class ASTTypeCommentNode : public ASTExpressionNode
+    {
+
+    };
 
     class ASTUnaryExpressionNode : public ASTExpressionNode
     {
@@ -599,6 +603,41 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> m_Left;
             std::shared_ptr<Token> m_Op2; // ':'
             std::shared_ptr<ASTStatementNode> m_Right;
+            std::shared_ptr<ASTStatementNode> m_Else;
+    };
+
+    class ASTForStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTForStatementNode(    unsigned int start,
+                                    unsigned int end,
+                                    std::shared_ptr<Token> op1,
+                                    std::shared_ptr<ASTExpressionNode> m_Left,
+                                    std::shared_ptr<Token> op2,
+                                    std::shared_ptr<ASTExpressionNode> m_Right,
+                                    std::shared_ptr<Token> op3,
+                                    std::shared_ptr<ASTTypeCommentNode> comment,
+                                    std::shared_ptr<ASTStatementNode> next
+                                );
+            void addElseStatement(std::shared_ptr<ASTStatementNode> node);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getLeft();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<Token> getOperatorThree();
+            std::shared_ptr<ASTTypeCommentNode> getTypeComment();
+            std::shared_ptr<ASTStatementNode> getNext();
+            std::shared_ptr<ASTStatementNode> getElseNode();
+            void addEndPosition(unsigned int end);
+
+        protected:
+            std::shared_ptr<Token> m_Op1; // 'for'
+            std::shared_ptr<ASTExpressionNode> m_Left;
+            std::shared_ptr<Token> m_Op2; // 'in'
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<Token> m_Op3; // ':'
+            std::shared_ptr<ASTTypeCommentNode> m_Comment;
+            std::shared_ptr<ASTStatementNode> m_Next;
             std::shared_ptr<ASTStatementNode> m_Else;
     };
 }
