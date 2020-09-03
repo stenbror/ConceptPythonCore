@@ -575,6 +575,8 @@ std::shared_ptr<ASTStatementNode> ASTIfStatementNode::getElseNode() { return m_E
 
 unsigned int ASTIfStatementNode::count() { return m_Elifs->size(); }
 
+void ASTIfStatementNode::addEndPosition(unsigned int end) { m_EndPos = end; }
+
 
 // ASTElifStatementNode ///////////////////////////////////////////////////////////////////////////////////////////////
 ASTElifStatementNode::ASTElifStatementNode( unsigned int start, 

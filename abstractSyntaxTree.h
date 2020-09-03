@@ -524,6 +524,7 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> getElifsNodes();
             std::shared_ptr<ASTStatementNode> getElseNode();
             unsigned int count();
+            void addEndPosition(unsigned int end);
 
         protected:
             std::shared_ptr<Token> m_Op1; // 'if'

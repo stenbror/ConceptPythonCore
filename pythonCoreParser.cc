@@ -5,6 +5,8 @@ using namespace PythonCore::Runtime;
 // Statement rules ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() { return nullptr; }
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
 
 
@@ -35,8 +37,48 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt()
 }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt() { return nullptr; }
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt() { return nullptr; }
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseElseStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    auto left = parseNamedTest();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op2 = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseStmt();
+    auto res = std::make_shared<ASTIfStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_ELIF)
+    {
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        auto left = parseNamedTest();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+        auto op2 = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseStmt();
+        auto node = std::make_shared<ASTElifStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
+        res->addElifStatement(node);
+    }
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ELSE) res->addElseStatement(parseElseStmt());
+    res->addEndPosition(m_Lexer->getPosition());
+    return res; 
+}
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseElseStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op2 = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseStmt();
+    auto res = std::make_shared<ASTElseStatementNode>(start, m_Lexer->getPosition(), op1, op2, right);
+    return res; 
+}
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt() { return nullptr; }
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
