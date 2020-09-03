@@ -701,3 +701,24 @@ ASTAsyncStatementNode::ASTAsyncStatementNode(unsigned int start, unsigned int en
 std::shared_ptr<Token> ASTAsyncStatementNode::getOperatorOne() { return m_Op1; }
 
 std::shared_ptr<ASTStatementNode> ASTAsyncStatementNode::getRight() { return m_Right; }
+
+
+// ASTSuiteStatementNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTSuiteStatementNode::ASTSuiteStatementNode(   unsigned int start,
+                                                unsigned int end,
+                                                std::shared_ptr<Token> op1,
+                                                std::shared_ptr<Token> op2,
+                                                std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                                std::shared_ptr<Token> op3
+                                            )
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_SUITE), m_Op1(op1), m_Op2(op2), m_Nodes(nodes), m_Op3(op3) { }
+
+std::shared_ptr<Token> ASTSuiteStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTSuiteStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTSuiteStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<Token> ASTSuiteStatementNode::getOperatorThree() { return m_Op3; }
+
+unsigned int ASTSuiteStatementNode::count() { return m_Nodes->size(); }

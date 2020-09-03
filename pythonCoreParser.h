@@ -14,6 +14,7 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTStatementNode> parseFuncDef();
 
             std::shared_ptr<ASTStatementNode> parseStmt();
+            std::shared_ptr<ASTStatementNode> parseSimpleStmt();
 
             std::shared_ptr<ASTStatementNode> parseTestListStarExpr();
 

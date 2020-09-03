@@ -9,6 +9,8 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef() { return null
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() { return nullptr; }
 
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSimpleStmt() { return nullptr; }
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
 
 
@@ -74,7 +76,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt()
     if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
     auto op2 = m_CurSymbol;
     m_Lexer->advance();
-    auto right = parseStmt();
+    auto right = parseSuite();
     auto res = std::make_shared<ASTIfStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
     while (m_CurSymbol->kind() == Token::TokenKind::PY_ELIF)
     {
@@ -84,7 +86,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt()
         if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
         auto op2 = m_CurSymbol;
         m_Lexer->advance();
-        auto right = parseStmt();
+        auto right = parseSuite();
         auto node = std::make_shared<ASTElifStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
         res->addElifStatement(node);
     }
@@ -101,7 +103,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseElseStmt()
     if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
     auto op2 = m_CurSymbol;
     m_Lexer->advance();
-    auto right = parseStmt();
+    auto right = parseSuite();
     return std::make_shared<ASTElseStatementNode>(start, m_Lexer->getPosition(), op1, op2, right);
 }
 
@@ -114,7 +116,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt()
     if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
     auto op2 = m_CurSymbol;
     m_Lexer->advance();
-    auto right = parseStmt();
+    auto right = parseSuite();
     auto res = std::make_shared<ASTWhileStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
     if (m_CurSymbol->kind() == Token::TokenKind::PY_ELSE) res->addElseStatement(parseElseStmt());
     res->addEndPosition(m_Lexer->getPosition());
@@ -135,7 +137,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt()
     auto op3 = m_CurSymbol;
     m_Lexer->advance();
     // Handle TypeComment here later.
-    auto next = parseStmt();
+    auto next = parseSuite();
     auto res = std::make_shared<ASTForStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right, op3, nullptr, next);
     if (m_CurSymbol->kind() == Token::TokenKind::PY_ELSE) res->addElseStatement(parseElseStmt());
     res->addEndPosition(m_Lexer->getPosition());
@@ -165,7 +167,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt()
     auto op2 = m_CurSymbol;
     m_Lexer->advance();
     // Handle TypeComment here later!
-    auto right = parseStmt();
+    auto right = parseSuite();
     return std::make_shared<ASTWithStatementNode>(start, m_Lexer->getPosition(), op1, nodes, commas, op2, nullptr, right); 
 }
 
@@ -190,7 +192,22 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseExceptClause()
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_NEWLINE)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_INDENT) throw ;
+        auto op2 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+        nodes->push_back(parseStmt());
+        while (m_CurSymbol->kind() != Token::TokenKind::PY_DEDENT) nodes->push_back(parseStmt());
+        auto op3 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        return std::make_shared<ASTSuiteStatementNode>(start, m_Lexer->getPosition(), op1, op2, nodes, op3);
+    }
+    return parseSimpleStmt(); 
 }
 
 // Expression rules ///////////////////////////////////////////////////////////////////////////////////////////////////
