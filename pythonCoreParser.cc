@@ -8,6 +8,21 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { re
 
 
 
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseIfStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseElseStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWhileStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithItem() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseExceptClause() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite() { return nullptr; }
+
+// Expression rules ///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseNamedTest() 
 { 
     unsigned int start = m_Lexer->getPosition();
