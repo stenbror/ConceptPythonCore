@@ -156,7 +156,35 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt()
     std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes; // 'except'
     std::shared_ptr<ASTStatementNode> elsePart;
     std::shared_ptr<ASTStatementNode> finallyPart;
-
+    bool hasSeenException = false;
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_EXCEPT)
+    {
+        auto op5 = m_CurSymbol; // 'except'
+        m_Lexer->advance();
+        auto first = m_CurSymbol->kind() != Token::TokenKind::PY_COLON ? parseExceptClause() : nullptr;
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+        auto op6 = m_CurSymbol; // ':'
+        m_Lexer->advance();
+        auto second = parseSuite();
+        auto node = std::make_shared<ASTExceptStatementNode>(start, m_Lexer->getPosition(), op5, first, op6, second);
+        nodes->push_back(node);
+        hasSeenException = true;   
+    }
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ELSE) elsePart = parseElseStmt();
+    std::shared_ptr<Token> op3;
+    std::shared_ptr<Token> op4;
+    std::shared_ptr<ASTStatementNode> right;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_FINALLY && !hasSeenException) throw ;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_FINALLY)
+    {
+        op3 = m_CurSymbol; // 'try'
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON) throw ;
+        op4 = m_CurSymbol; // ':'
+        m_Lexer->advance();
+        right = parseSuite();
+        finallyPart = std::make_shared<ASTFinallyStatementNode>(start, m_Lexer->getPosition(), op3, op4, right);
+    }
     return std::make_shared<ASTTryStatementNode>(start, m_Lexer->getPosition(), op1, op2, left, nodes, elsePart, finallyPart);
 }
 
