@@ -10,14 +10,45 @@ namespace PythonCore::Runtime
     class PythonCoreParser
     {
         public:
+            std::shared_ptr<ASTStatementNode>  parseSingleInput(std::shared_ptr<PythonCoreTokenizer> lexer);
+            std::shared_ptr<ASTStatementNode>  parseFileInput(std::shared_ptr<PythonCoreTokenizer> lexer);
+            std::shared_ptr<ASTStatementNode>  parseEvalInput(std::shared_ptr<PythonCoreTokenizer> lexer);
 
+        protected:
+            std::shared_ptr<ASTStatementNode>  parseDecorator();
+            std::shared_ptr<ASTStatementNode>  parseDecorators();
+            std::shared_ptr<ASTStatementNode>  parseDecorated();
+            std::shared_ptr<ASTStatementNode>  parseAsyncFuncDef();
             std::shared_ptr<ASTStatementNode>  parseFuncDef();
-
+            std::shared_ptr<ASTStatementNode>  parseParameters();
+            std::shared_ptr<ASTStatementNode>  parseTypedArgsList();
+            std::shared_ptr<ASTStatementNode>  parseTFPDef();
+            std::shared_ptr<ASTStatementNode>  parseVarArgsList();
+            std::shared_ptr<ASTStatementNode>  parseVFPDef();
             std::shared_ptr<ASTStatementNode>  parseStmt();
             std::shared_ptr<ASTStatementNode>  parseSimpleStmt();
-
+            std::shared_ptr<ASTStatementNode>  parseSmallStmt();
+            std::shared_ptr<ASTStatementNode>  parseExprStatement();
             std::shared_ptr<ASTStatementNode>  parseTestListStarExpr();
-
+            std::shared_ptr<ASTStatementNode>  parseDelStmt();
+            std::shared_ptr<ASTStatementNode>  parsePassStmt();
+            std::shared_ptr<ASTStatementNode>  parseFlowStmt();
+            std::shared_ptr<ASTStatementNode>  parseBreakStmt();
+            std::shared_ptr<ASTStatementNode>  parseContinueStmt();
+            std::shared_ptr<ASTStatementNode>  parseReturnStmt();
+            std::shared_ptr<ASTStatementNode>  parseYieldStmt();
+            std::shared_ptr<ASTStatementNode>  parseRaiseStmt();
+            std::shared_ptr<ASTStatementNode>  parseImportStmt();
+            std::shared_ptr<ASTStatementNode>  parseImportName();
+            std::shared_ptr<ASTStatementNode>  parseImportFrom();
+            std::shared_ptr<ASTStatementNode>  parseImportAsName();
+            std::shared_ptr<ASTStatementNode>  parseDottedAsName();
+            std::shared_ptr<ASTStatementNode>  parseImportAsNames();
+            std::shared_ptr<ASTStatementNode>  parseDottedAsNames();
+            std::shared_ptr<ASTStatementNode>  parseDottedName();
+            std::shared_ptr<ASTStatementNode>  parseGlobalStmt();
+            std::shared_ptr<ASTStatementNode>  parseNonlocalStmt();
+            std::shared_ptr<ASTStatementNode>  parseAssertStmt();
             std::shared_ptr<ASTStatementNode>  parseCompoundStmt();
             std::shared_ptr<ASTStatementNode>  parseAsyncStmt();
             std::shared_ptr<ASTStatementNode>  parseIfStmt();

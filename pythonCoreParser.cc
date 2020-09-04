@@ -2,19 +2,86 @@
 
 using namespace PythonCore::Runtime;
 
+// Parser start rules /////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSingleInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFileInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseEvalInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
+
+
 // Statement rules ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorator() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorators() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorated() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncFuncDef() { return nullptr; }
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseParameters() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTypedArgsList() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTFPDef() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVarArgsList() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVFPDef() { return nullptr; }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() { return nullptr; }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSimpleStmt() { return nullptr; }
 
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSmallStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseExprStatement() { return nullptr; }
+
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
 
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDelStmt() { return nullptr; }
 
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parsePassStmt() { return nullptr; }
 
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFlowStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseBreakStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseContinueStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseReturnStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseYieldStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseRaiseStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportName() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportFrom() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsName() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsName() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsNames() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsNames() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedName() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseGlobalStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseNonlocalStmt() { return nullptr; }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseAssertStmt() { return nullptr; }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt() 
 { 
