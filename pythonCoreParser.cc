@@ -185,9 +185,20 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseWithItem()
     return left; 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseExceptClause() 
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseExceptClause() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_AS)
+    {
+        auto op1 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+        auto op2 = m_CurSymbol;
+        m_CurSymbol = m_Lexer->advance();
+        return std::make_shared<ASTExceptionClauseExpressionNode>(start, m_Lexer->getPosition(), left, op1, op2);
+    }
+    return left; 
 }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite() 

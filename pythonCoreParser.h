@@ -11,24 +11,24 @@ namespace PythonCore::Runtime
     {
         public:
 
-            std::shared_ptr<ASTStatementNode> parseFuncDef();
+            std::shared_ptr<ASTStatementNode>  parseFuncDef();
 
-            std::shared_ptr<ASTStatementNode> parseStmt();
-            std::shared_ptr<ASTStatementNode> parseSimpleStmt();
+            std::shared_ptr<ASTStatementNode>  parseStmt();
+            std::shared_ptr<ASTStatementNode>  parseSimpleStmt();
 
-            std::shared_ptr<ASTStatementNode> parseTestListStarExpr();
+            std::shared_ptr<ASTStatementNode>  parseTestListStarExpr();
 
-            std::shared_ptr<ASTStatementNode> parseCompoundStmt();
-            std::shared_ptr<ASTStatementNode> parseAsyncStmt();
-            std::shared_ptr<ASTStatementNode> parseIfStmt();
-            std::shared_ptr<ASTStatementNode> parseElseStmt();
-            std::shared_ptr<ASTStatementNode> parseWhileStmt();
-            std::shared_ptr<ASTStatementNode> parseForStmt();
-            std::shared_ptr<ASTStatementNode> parseTryStmt();
-            std::shared_ptr<ASTStatementNode> parseWithStmt();
+            std::shared_ptr<ASTStatementNode>  parseCompoundStmt();
+            std::shared_ptr<ASTStatementNode>  parseAsyncStmt();
+            std::shared_ptr<ASTStatementNode>  parseIfStmt();
+            std::shared_ptr<ASTStatementNode>  parseElseStmt();
+            std::shared_ptr<ASTStatementNode>  parseWhileStmt();
+            std::shared_ptr<ASTStatementNode>  parseForStmt();
+            std::shared_ptr<ASTStatementNode>  parseTryStmt();
+            std::shared_ptr<ASTStatementNode>  parseWithStmt();
             std::shared_ptr<ASTExpressionNode> parseWithItem();
-            std::shared_ptr<ASTStatementNode> parseExceptClause();
-            std::shared_ptr<ASTStatementNode> parseSuite();
+            std::shared_ptr<ASTExpressionNode> parseExceptClause();
+            std::shared_ptr<ASTStatementNode>  parseSuite();
 
             std::shared_ptr<ASTExpressionNode> parseNamedTest();
             std::shared_ptr<ASTExpressionNode> parseTest();

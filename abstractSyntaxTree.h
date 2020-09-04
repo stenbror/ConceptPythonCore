@@ -31,7 +31,7 @@ namespace PythonCore::Runtime
                 NK_ASYNC_FUNCDEF, NK_FUNCDEF, NK_PARAMETERS, NK_CLASS, NK_ARGLIST, NK_ARGUMENT, NK_TYPED_ARGS_LIST, NK_VAR_ARGS_LIST,
                 NK_TFP_DEF, NK_VFP_DEF, NK_STMT_LIST, NK_SINGLE_INPUT, NK_FILE_INPUT, NK_EVAL_INPUT, NK_FUNC_BODY_SUITE,
                 NK_FUNC_TYPE_INPUT, NK_FUNC_TYPE, NK_TYPE_LIST, NK_STRING_LIST, NK_DOT_NAME, NK_CALL, NK_INDEN, NK_LIST_ARGUMENT,
-                NK_KW_ARGUMENT, NK_COMP_ARGUMENT, NK_COLON_ASSIGN_ARGUMENT, NK_ASSIGN_ARGUMENT, NK_KV_LIST, NK_SET_LIST
+                NK_KW_ARGUMENT, NK_COMP_ARGUMENT, NK_COLON_ASSIGN_ARGUMENT, NK_ASSIGN_ARGUMENT, NK_KV_LIST, NK_SET_LIST, NK_EXCEPT_CLAUSE
             };
 
         public:
@@ -507,6 +507,20 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Colons;
             std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Values;
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Commas;
+    };
+
+    class ASTExceptionClauseExpressionNode : public ASTExpressionNode
+    {
+        public:
+            ASTExceptionClauseExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<ASTExpressionNode> left, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2);
+            std::shared_ptr<ASTExpressionNode> getLeft();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<ASTExpressionNode> m_Left;
+            std::shared_ptr<Token> m_Op1; // 'as'
+            std::shared_ptr<Token> m_Op2; // 'name'
     };
 
     class ASTIfStatementNode : public ASTStatementNode

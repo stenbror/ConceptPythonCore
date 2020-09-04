@@ -75,6 +75,7 @@ bool ASTNode::isExpressionNode()
         case NodeKind::NK_COLON_ASSIGN_ARGUMENT:
         case NodeKind::NK_ASSIGN_ARGUMENT:
         case NodeKind::NK_WITH_ITEM:
+        case NodeKind::NK_EXCEPT_CLAUSE:
             return true;
         default:
             return false;
@@ -722,3 +723,14 @@ std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTSuiteStatemen
 std::shared_ptr<Token> ASTSuiteStatementNode::getOperatorThree() { return m_Op3; }
 
 unsigned int ASTSuiteStatementNode::count() { return m_Nodes->size(); }
+
+
+// ASTExceptionClauseExpressionNode ///////////////////////////////////////////////////////////////////////////////////
+ASTExceptionClauseExpressionNode::ASTExceptionClauseExpressionNode(unsigned int start, unsigned int end, std::shared_ptr<ASTExpressionNode> left, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_EXCEPT_CLAUSE), m_Left(left), m_Op1(op1), m_Op2(op2) { }
+
+std::shared_ptr<ASTExpressionNode> ASTExceptionClauseExpressionNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTExceptionClauseExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTExceptionClauseExpressionNode::getOperatorTwo() { return m_Op2; }
