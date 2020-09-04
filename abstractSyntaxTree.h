@@ -716,6 +716,73 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> m_Nodes;
             std::shared_ptr<Token> m_Op3;
     };
+
+    class ASTTryStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTTryStatementNode(    unsigned int start,
+                                    unsigned int end,
+                                    std::shared_ptr<Token> op1,
+                                    std::shared_ptr<Token> op2,
+                                    std::shared_ptr<ASTStatementNode> left,
+                                    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                    std::shared_ptr<ASTStatementNode> elsePart,
+                                    std::shared_ptr<ASTStatementNode> finallyPart
+                                    );
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> getNodes();
+            std::shared_ptr<ASTStatementNode> getElsePart();
+            std::shared_ptr<ASTStatementNode> getFinallyPart();
+
+        protected:
+            std::shared_ptr<Token> m_Op1; // 'try'
+            std::shared_ptr<Token> m_Op2; // ':'
+            std::shared_ptr<ASTStatementNode> m_Left; // suite
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> m_Nodes; // except
+            std::shared_ptr<ASTStatementNode> m_ElsePart;
+            std::shared_ptr<ASTStatementNode> m_FinallyPart;
+    };
+
+    class ASTExceptStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTExceptStatementNode( unsigned int start, 
+                                    unsigned int end, 
+                                    std::shared_ptr<Token> op1, 
+                                    std::shared_ptr<ASTExpressionNode> left, 
+                                    std::shared_ptr<Token> op2, 
+                                    std::shared_ptr<ASTStatementNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getLeft();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTStatementNode> getRight();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;   // 'except'
+            std::shared_ptr<ASTExpressionNode> m_Left;
+            std::shared_ptr<Token> m_Op2; // ':'
+            std::shared_ptr<ASTStatementNode> m_Right;
+    };
+
+    class ASTFinallyStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTFinallyStatementNode(    unsigned int start, 
+                                        unsigned int end, 
+                                        std::shared_ptr<Token> op1, 
+                                        std::shared_ptr<Token> op2, 
+                                        std::shared_ptr<ASTStatementNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTStatementNode> getRight();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;   // 'finnaly'
+            std::shared_ptr<Token> m_Op2; // ':'
+            std::shared_ptr<ASTStatementNode> m_Right;
+    };
 }
 
 #endif

@@ -734,3 +734,61 @@ std::shared_ptr<ASTExpressionNode> ASTExceptionClauseExpressionNode::getLeft() {
 std::shared_ptr<Token> ASTExceptionClauseExpressionNode::getOperatorOne() { return m_Op1; }
 
 std::shared_ptr<Token> ASTExceptionClauseExpressionNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTTryStatementNode ////////////////////////////////////////////////////////////////////////////////////////////////
+ASTTryStatementNode::ASTTryStatementNode(   unsigned int start,
+                                            unsigned int end,
+                                            std::shared_ptr<Token> op1,
+                                            std::shared_ptr<Token> op2,
+                                            std::shared_ptr<ASTStatementNode> left,
+                                            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                            std::shared_ptr<ASTStatementNode> elsePart,
+                                            std::shared_ptr<ASTStatementNode> finallyPart
+                                        )
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_TRY_STMT), m_Op1(op1), m_Op2(op2), m_Left(left), m_Nodes(nodes), m_ElsePart(elsePart), m_FinallyPart(finallyPart) { }
+
+std::shared_ptr<Token> ASTTryStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTTryStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTTryStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTTryStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<ASTStatementNode> ASTTryStatementNode::getElsePart() { return m_ElsePart; }
+
+std::shared_ptr<ASTStatementNode> ASTTryStatementNode::getFinallyPart() { return m_FinallyPart; }
+
+
+// ASTExceptStatementNode /////////////////////////////////////////////////////////////////////////////////////////////
+ASTExceptStatementNode::ASTExceptStatementNode( unsigned int start, 
+                                                unsigned int end, 
+                                                std::shared_ptr<Token> op1, 
+                                                std::shared_ptr<ASTExpressionNode> left, 
+                                                std::shared_ptr<Token> op2, 
+                                                std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_EXCEPT_STMT), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right) { }
+
+std::shared_ptr<Token> ASTExceptStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTExceptStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTExceptStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTExceptStatementNode::getRight() { return m_Right; }
+
+
+// ASTFinnalyStatementNode ////////////////////////////////////////////////////////////////////////////////////////////
+ASTFinallyStatementNode::ASTFinallyStatementNode(   unsigned int start, 
+                                                    unsigned int end, 
+                                                    std::shared_ptr<Token> op1, 
+                                                    std::shared_ptr<Token> op2, 
+                                                    std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_FINALLY_STMT), m_Op1(op1), m_Op2(op2), m_Right(right) { }
+
+std::shared_ptr<Token> ASTFinallyStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTFinallyStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTFinallyStatementNode::getRight() { return m_Right; }

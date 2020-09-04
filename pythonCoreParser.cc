@@ -146,7 +146,18 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseForStmt()
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTryStmt() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol; // 'try'
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON) throw ;
+    auto op2 = m_CurSymbol; // ':'
+    m_Lexer->advance();
+    auto left = parseSuite();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes; // 'except'
+    std::shared_ptr<ASTStatementNode> elsePart;
+    std::shared_ptr<ASTStatementNode> finallyPart;
+
+    return std::make_shared<ASTTryStatementNode>(start, m_Lexer->getPosition(), op1, op2, left, nodes, elsePart, finallyPart);
 }
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseWithStmt() 
