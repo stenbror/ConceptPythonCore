@@ -792,3 +792,30 @@ std::shared_ptr<Token> ASTFinallyStatementNode::getOperatorOne() { return m_Op1;
 std::shared_ptr<Token> ASTFinallyStatementNode::getOperatorTwo() { return m_Op2; }
 
 std::shared_ptr<ASTStatementNode> ASTFinallyStatementNode::getRight() { return m_Right; }
+
+
+// ASTClassDefStatementNode ///////////////////////////////////////////////////////////////////////////////////////////
+ASTClassDefStatementNode::ASTClassDefStatementNode( unsigned int start,
+                                                    unsigned int end,
+                                                    std::shared_ptr<Token> op1,
+                                                    std::shared_ptr<Token> op2,
+                                                    std::shared_ptr<Token> op3,
+                                                    std::shared_ptr<ASTExpressionNode> left,
+                                                    std::shared_ptr<Token> op4,
+                                                    std::shared_ptr<Token> op5,
+                                                    std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_CLASS), m_Op1(op1), m_Op2(op2), m_Op3(op3), m_Left(left), m_Op4(op4), m_Op5(op5), m_Right(right) { }
+                                    
+std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<ASTExpressionNode> ASTClassDefStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorFour() { return m_Op4; }
+
+std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorFive() { return m_Op5; }
+
+std::shared_ptr<ASTStatementNode> ASTClassDefStatementNode::getRight() { return m_Right; }

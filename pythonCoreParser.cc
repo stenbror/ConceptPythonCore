@@ -34,8 +34,9 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt()
             return parseWithStmt();
         case Token::TokenKind::PY_MATRICE:
         case Token::TokenKind::PY_DEF:
-        case Token::TokenKind::PY_CLASS:
             return nullptr;
+        case Token::TokenKind::PY_CLASS:
+            return parseClassDef();
         default:    throw ;
     }
 }
@@ -259,6 +260,37 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSuite()
     }
     return parseSimpleStmt(); 
 }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseClassDef()
+{
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol; // 'class'
+    m_CurSymbol = m_Lexer->advance();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    auto op2 = m_CurSymbol; // 'NAME'
+    m_CurSymbol = m_Lexer->advance();
+    std::shared_ptr<Token> op3;
+    std::shared_ptr<ASTExpressionNode> left;
+    std::shared_ptr<Token> op4;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN)
+    {
+        auto op3 = m_CurSymbol; // '('
+        m_CurSymbol = m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN)
+        {
+            left = parseArgList();
+        }
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+        auto op4 = m_CurSymbol; // ')'
+        m_CurSymbol = m_Lexer->advance();
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op5 = m_CurSymbol; // ':'
+    m_CurSymbol = m_Lexer->advance();
+    auto right = parseSuite();
+    return std::make_shared<ASTClassDefStatementNode>(start, m_Lexer->getPosition(), op1, op2, op3, left, op4, op5, right);
+}
+
 
 // Expression rules ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
