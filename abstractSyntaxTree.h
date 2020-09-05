@@ -931,6 +931,25 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op2;
     };
 
+    class ASTListSimpleStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTListSimpleStatementNode( unsigned int start, 
+                                        unsigned int end,
+                                        std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators,
+                                        std::shared_ptr<Token> op);
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getSeparators();
+            std::shared_ptr<Token> getOperatorOne();
+            unsigned int count();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> m_Nodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Separators;
+            std::shared_ptr<Token> m_Op1; 
+    };
+
 }
 
 #endif

@@ -137,9 +137,43 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVarArgsList() { return
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVFPDef() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() 
+{ 
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_IF:
+        case Token::TokenKind::PY_FOR:
+        case Token::TokenKind::PY_WHILE:
+        case Token::TokenKind::PY_TRY:
+        case Token::TokenKind::PY_WITH:
+        case Token::TokenKind::PY_MATRICE:
+        case Token::TokenKind::PY_CLASS:
+        case Token::TokenKind::PY_DEF:
+        case Token::TokenKind::PY_ASYNC:
+            return parseCompoundStmt();
+        default:
+            return parseSimpleStmt();
+    }
+}
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSimpleStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSimpleStmt() 
+{
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators;
+    nodes->push_back(parseSmallStmt());
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_SEMICOLON)
+    {
+        separators->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_NEWLINE) continue;
+        nodes->push_back(parseSmallStmt());
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE) throw ;
+    auto op1 = m_CurSymbol; // 'NEWLINE'
+    m_Lexer->advance();
+    return std::make_shared<ASTListSimpleStatementNode>(start, m_Lexer->getPosition(), nodes, separators, op1);
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSmallStmt() { return nullptr; }
 

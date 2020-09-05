@@ -923,3 +923,21 @@ std::shared_ptr<Token> ASTParameterStatementNode::getOperatorOne() { return m_Op
 std::shared_ptr<ASTStatementNode> ASTParameterStatementNode::getRight() { return m_Right; }
 
 std::shared_ptr<Token> ASTParameterStatementNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTListSimpleStatementNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTListSimpleStatementNode::ASTListSimpleStatementNode( unsigned int start, 
+                                                        unsigned int end,
+                                                        std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators,
+                                                        std::shared_ptr<Token> op)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_SIMPLE_STMT_LIST), m_Nodes(nodes), m_Separators(separators), m_Op1(op) { }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTListSimpleStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTListSimpleStatementNode::getSeparators() { return m_Separators; }
+
+std::shared_ptr<Token> ASTListSimpleStatementNode::getOperatorOne() { return m_Op1; }
+
+unsigned int ASTListSimpleStatementNode::count() { return m_Nodes->size(); }
+
