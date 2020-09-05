@@ -175,7 +175,33 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseSimpleStmt()
     return std::make_shared<ASTListSimpleStatementNode>(start, m_Lexer->getPosition(), nodes, separators, op1);
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSmallStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSmallStmt() 
+{ 
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_DEL:
+            return parseDelStmt();
+        case Token::TokenKind::PY_PASS:
+            return parsePassStmt();
+        case Token::TokenKind::PY_BREAK:
+        case Token::TokenKind::PY_CONTINUE:
+        case Token::TokenKind::PY_RETURN:
+        case Token::TokenKind::PY_RAISE:
+        case Token::TokenKind::PY_YIELD:
+            return parseFlowStmt();
+        case Token::TokenKind::PY_IMPORT:
+        case Token::TokenKind::PY_FROM:
+            return parseImportStmt();
+        case Token::TokenKind::PY_GLOBAL:
+            return parseGlobalStmt();
+        case Token::TokenKind::PY_NONLOCAL:
+            return parseNonlocalStmt();
+        case Token::TokenKind::PY_ASSIGN:
+            return parseAssertStmt();
+        default:
+            return parseExprStatement();
+    }
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseExprStatement() { return nullptr; }
 
@@ -185,11 +211,46 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDelStmt() { return nul
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parsePassStmt() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFlowStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFlowStmt() 
+{ 
+    std::shared_ptr<ASTStatementNode> res;
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_BREAK:
+            res = parseBreakStmt();
+            break;
+        case Token::TokenKind::PY_CONTINUE:
+            res = parseContinueStmt();
+            break;
+        case Token::TokenKind::PY_RETURN:
+            res = parseReturnStmt();
+            break;
+        case Token::TokenKind::PY_RAISE:
+            res = parseRaiseStmt();
+            break;
+        case Token::TokenKind::PY_YIELD:
+            res = parseYieldStmt();
+            break;
+        default:    throw ;
+    }
+    return res;
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseBreakStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseBreakStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    return std::make_shared<ASTSimpleFlowStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_BREAK, op); 
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseContinueStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseContinueStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    return std::make_shared<ASTSimpleFlowStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_BREAK, op);  
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseReturnStmt() { return nullptr; }
 

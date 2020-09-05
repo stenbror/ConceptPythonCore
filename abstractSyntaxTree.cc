@@ -941,3 +941,9 @@ std::shared_ptr<Token> ASTListSimpleStatementNode::getOperatorOne() { return m_O
 
 unsigned int ASTListSimpleStatementNode::count() { return m_Nodes->size(); }
 
+
+// ASTSimpleFlowStatementNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTSimpleFlowStatementNode::ASTSimpleFlowStatementNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind, std::shared_ptr<Token> op)
+    :   ASTStatementNode(start, end, kind), m_Op1(op) { }
+
+std::shared_ptr<Token> ASTSimpleFlowStatementNode::getOperatorOne() { return m_Op1; }

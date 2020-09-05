@@ -950,6 +950,16 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op1; 
     };
 
+    class ASTSimpleFlowStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTSimpleFlowStatementNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind, std::shared_ptr<Token> op);
+            std::shared_ptr<Token> getOperatorOne();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+    };
+
 }
 
 #endif
