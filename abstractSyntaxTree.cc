@@ -819,3 +819,54 @@ std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorFour() { return m_Op
 std::shared_ptr<Token> ASTClassDefStatementNode::getOperatorFive() { return m_Op5; }
 
 std::shared_ptr<ASTStatementNode> ASTClassDefStatementNode::getRight() { return m_Right; }
+
+
+// ASTDecoratorStatementNode //////////////////////////////////////////////////////////////////////////////////////////
+ASTDecoratorStatementNode::ASTDecoratorStatementNode(   unsigned int start,
+                                                        unsigned int end,
+                                                        std::shared_ptr<Token> op1,
+                                                        std::shared_ptr<ASTStatementNode> left,
+                                                        std::shared_ptr<Token> op2,
+                                                        std::shared_ptr<ASTExpressionNode> right,
+                                                        std::shared_ptr<Token> op3,
+                                                        std::shared_ptr<Token> op4)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DECORATOR), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right), m_Op3(op3), m_Op4(op4) { }
+
+std::shared_ptr<Token> ASTDecoratorStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTDecoratorStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTDecoratorStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTDecoratorStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTDecoratorStatementNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<Token> ASTDecoratorStatementNode::getOperatorFour() { return m_Op4; }
+
+
+// ASTStatementListNode ///////////////////////////////////////////////////////////////////////////////////////////////
+ASTStatementListNode::ASTStatementListNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind)
+    :   ASTStatementNode(start, end, kind) { }
+
+void ASTStatementListNode::addNode(std::shared_ptr<ASTStatementNode> node) { m_Nodes->push_back(node); }
+
+void ASTStatementListNode::addSeparator(std::shared_ptr<Token> op) { m_Ops->push_back(op); }
+
+void ASTStatementListNode::addEndPosition(unsigned int end) {  m_EndPos = end; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTStatementListNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTStatementListNode::getSeparators() { return m_Ops; }
+
+unsigned int ASTStatementListNode::count() { return m_Nodes->size(); }
+
+
+// ASTDecoratedStatementNode //////////////////////////////////////////////////////////////////////////////////////////
+ASTDecoratedStatementNode::ASTDecoratedStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DECORATED), m_Left(left), m_Right(right) { }
+
+std::shared_ptr<ASTStatementNode> ASTDecoratedStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<ASTStatementNode> ASTDecoratedStatementNode::getRight() { return m_Right; }
+

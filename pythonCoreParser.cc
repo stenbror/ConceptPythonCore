@@ -15,7 +15,29 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseEvalInput(std::shared_
 // Statement rules ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorator() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorator() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol; // '@'
+    m_Lexer->advance();
+    auto left = parseDottedName();
+    std::shared_ptr<Token> op2;
+    std::shared_ptr<ASTExpressionNode> right;
+    std::shared_ptr<Token> op3;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN)
+    {
+        op2 = m_CurSymbol; // '('
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) right = parseArgList();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+        op3 = m_CurSymbol; // '('
+        m_Lexer->advance();
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE) throw ;
+    auto op4 = m_CurSymbol; // 'NEWLINE'
+    m_Lexer->advance();
+    return std::make_shared<ASTDecoratorStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right, op3, op4); 
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorators() { return nullptr; }
 
