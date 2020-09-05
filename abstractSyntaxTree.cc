@@ -909,3 +909,17 @@ std::shared_ptr<ASTExpressionNode> ASTFuncDefStatementNode::getTypeComment() { r
 
 std::shared_ptr<ASTStatementNode> ASTFuncDefStatementNode::getNext() { return m_Next; }
 
+
+// ASTParameterStatementNode //////////////////////////////////////////////////////////////////////////////////////////
+ASTParameterStatementNode::ASTParameterStatementNode(   unsigned int start, 
+                                                        unsigned int end, 
+                                                        std::shared_ptr<Token> op1, 
+                                                        std::shared_ptr<ASTStatementNode> rigth, 
+                                                        std::shared_ptr<Token> op2)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_PARAMETERS), m_Op1(op1), m_Right(rigth), m_Op2(op2) { }
+
+std::shared_ptr<Token> ASTParameterStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTParameterStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTParameterStatementNode::getOperatorTwo() { return m_Op2; }

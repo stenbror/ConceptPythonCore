@@ -117,7 +117,16 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef()
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseParameters() 
 { 
-    return nullptr; 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_LEFT_PAREN) throw ;
+    auto op1 = m_CurSymbol; // '('
+    m_Lexer->advance();
+    std::shared_ptr<ASTStatementNode> right = nullptr;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) right = parseTypedArgsList();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+    auto op2 = m_CurSymbol; // ')'
+    m_Lexer->advance();
+    return std::make_shared<ASTParameterStatementNode>(start, m_Lexer->getPosition(), op1, right, op2); 
 }
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTypedArgsList() { return nullptr; }
