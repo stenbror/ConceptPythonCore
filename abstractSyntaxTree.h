@@ -872,6 +872,18 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTStatementNode> m_Right;
     };
 
+    class ASTAsyncFuncDefStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTAsyncFuncDefStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTStatementNode> getRight();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTStatementNode> m_Right;
+    };
+
 }
 
 #endif

@@ -870,3 +870,11 @@ std::shared_ptr<ASTStatementNode> ASTDecoratedStatementNode::getLeft() { return 
 
 std::shared_ptr<ASTStatementNode> ASTDecoratedStatementNode::getRight() { return m_Right; }
 
+
+// ASTAsyncFuncDefStatementNode ///////////////////////////////////////////////////////////////////////////////////////
+ASTAsyncFuncDefStatementNode::ASTAsyncFuncDefStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DECORATED), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<Token> ASTAsyncFuncDefStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTAsyncFuncDefStatementNode::getRight() { return m_Right; }

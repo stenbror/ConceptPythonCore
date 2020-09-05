@@ -77,7 +77,14 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorated()
     }
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncFuncDef() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncFuncDef() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol; // 'async'
+    m_Lexer->advance();
+    auto right = parseFuncDef();
+    return std::make_shared<ASTAsyncFuncDefStatementNode>(start, m_Lexer->getPosition(), op, right); 
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef() { return nullptr; }
 
