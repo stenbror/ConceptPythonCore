@@ -884,6 +884,39 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTStatementNode> m_Right;
     };
 
+    class ASTFuncDefStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTFuncDefStatementNode(    unsigned int start,
+                                        unsigned int end,
+                                        std::shared_ptr<Token> op1,
+                                        std::shared_ptr<Token> op2,
+                                        std::shared_ptr<ASTStatementNode> left,
+                                        std::shared_ptr<Token> op3,
+                                        std::shared_ptr<ASTExpressionNode> right,
+                                        std::shared_ptr<Token> op4,
+                                        std::shared_ptr<ASTExpressionNode> comment,
+                                        std::shared_ptr<ASTStatementNode> next);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<Token> getOperatorThree();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<Token> getOperatorFour();
+            std::shared_ptr<ASTExpressionNode> getTypeComment();
+            std::shared_ptr<ASTStatementNode> getNext();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<ASTStatementNode> m_Left;
+            std::shared_ptr<Token> m_Op3;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<Token> m_Op4;
+            std::shared_ptr<ASTExpressionNode> m_TypeComment;
+            std::shared_ptr<ASTStatementNode> m_Next;
+    };
+
 }
 
 #endif

@@ -878,3 +878,34 @@ ASTAsyncFuncDefStatementNode::ASTAsyncFuncDefStatementNode(unsigned int start, u
 std::shared_ptr<Token> ASTAsyncFuncDefStatementNode::getOperatorOne() { return m_Op1; }
 
 std::shared_ptr<ASTStatementNode> ASTAsyncFuncDefStatementNode::getRight() { return m_Right; }
+
+
+// ASTFuncDefStatementNode ////////////////////////////////////////////////////////////////////////////////////////////
+ASTFuncDefStatementNode::ASTFuncDefStatementNode(   unsigned int start,
+                                                    unsigned int end,
+                                                    std::shared_ptr<Token> op1,
+                                                    std::shared_ptr<Token> op2,
+                                                    std::shared_ptr<ASTStatementNode> left,
+                                                    std::shared_ptr<Token> op3,
+                                                    std::shared_ptr<ASTExpressionNode> right,
+                                                    std::shared_ptr<Token> op4,
+                                                    std::shared_ptr<ASTExpressionNode> comment,
+                                                    std::shared_ptr<ASTStatementNode> next)
+    : ASTStatementNode(start, end, ASTNode::NodeKind::NK_FUNCDEF), m_Op1(op1), m_Op2(op2), m_Left(left), m_Op3(op3), m_Op4(op4), m_TypeComment(comment), m_Next(next) { }
+
+std::shared_ptr<Token> ASTFuncDefStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTFuncDefStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTStatementNode> ASTFuncDefStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTFuncDefStatementNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<ASTExpressionNode> ASTFuncDefStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTFuncDefStatementNode::getOperatorFour() { return m_Op4; }
+
+std::shared_ptr<ASTExpressionNode> ASTFuncDefStatementNode::getTypeComment() { return m_TypeComment; }
+
+std::shared_ptr<ASTStatementNode> ASTFuncDefStatementNode::getNext() { return m_Next; }
+

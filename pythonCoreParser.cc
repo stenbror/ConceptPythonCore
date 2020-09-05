@@ -86,9 +86,39 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncFuncDef()
     return std::make_shared<ASTAsyncFuncDefStatementNode>(start, m_Lexer->getPosition(), op, right); 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseFuncDef() 
+{
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol; // 'def'
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    auto op2 = m_CurSymbol; // 'NAME'
+    m_Lexer->advance();
+    auto left = parseParameters();
+    std::shared_ptr<Token> op3;
+    std::shared_ptr<ASTExpressionNode> right;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_ARROW) // '->'
+    {
+        op3 = m_CurSymbol;
+        m_Lexer->advance();
+        right = parseTest();
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_COLON) throw ;
+    auto op4 = m_CurSymbol; // ':'
+    m_Lexer->advance();
+    std::shared_ptr<ASTExpressionNode> comment;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+    {
+        // Later...
+    }
+    auto next = parseFuncBodySuite();
+    return std::make_shared<ASTFuncDefStatementNode>(start, m_Lexer->getPosition(), op1, op2, left, op3, right, op4, comment, next); 
+}
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseParameters() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseParameters() 
+{ 
+    return nullptr; 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTypedArgsList() { return nullptr; }
 
@@ -191,7 +221,7 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncStmt()
         case Token::TokenKind::PY_DEF:
             {
                 auto right = parseFuncDef();
-                return std::make_shared<ASTAsyncStatementNode>(start, m_Lexer->getPosition(), op, right);
+                return std::make_shared<ASTAsyncFuncDefStatementNode>(start, m_Lexer->getPosition(), op, right);
             }
         default:
             throw ;
@@ -420,6 +450,8 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseClassDef()
     auto right = parseSuite();
     return std::make_shared<ASTClassDefStatementNode>(start, m_Lexer->getPosition(), op1, op2, op3, left, op4, op5, right);
 }
+
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFuncBodySuite() { return nullptr; }
 
 
 // Expression rules ///////////////////////////////////////////////////////////////////////////////////////////////////
