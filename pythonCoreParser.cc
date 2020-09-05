@@ -39,9 +39,43 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorator()
     return std::make_shared<ASTDecoratorStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right, op3, op4); 
 }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorators() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorators() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto res = std::make_shared<ASTStatementListNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_DECORATORS);
+    do
+    {
+        res->addNode(parseDecorator());
+    } while (m_CurSymbol->kind() == Token::TokenKind::PY_MATRICE);
+    res->addEndPosition(m_Lexer->getPosition());
+    return res;
+}
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorated() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseDecorated() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseDecorators();
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_CLASS:
+            {
+                auto right = parseClassDef();
+                return std::make_shared<ASTDecoratedStatementNode>(start, m_Lexer->getPosition(), left, right);
+            }
+        case Token::TokenKind::PY_DEF:
+            {
+                auto right = parseFuncDef();
+                return std::make_shared<ASTDecoratedStatementNode>(start, m_Lexer->getPosition(), left, right);
+            }
+        case Token::TokenKind::PY_ASYNC:
+            {
+                auto right = parseAsyncFuncDef();
+                return std::make_shared<ASTDecoratedStatementNode>(start, m_Lexer->getPosition(), left, right);
+            }
+        default:
+            throw ;
+    }
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseAsyncFuncDef() { return nullptr; }
 
