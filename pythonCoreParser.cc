@@ -252,7 +252,18 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseContinueStmt()
     return std::make_shared<ASTSimpleFlowStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_BREAK, op);  
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseReturnStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseReturnStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_SEMICOLON && m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE)
+    {
+        auto right = parseTestListStarExpr();
+        return std::make_shared<ASTReturnStatementNode>(start, m_Lexer->getPosition(), op, right);
+    }
+    return std::make_shared<ASTReturnStatementNode>(start, m_Lexer->getPosition(), op, nullptr);;
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseYieldStmt() { return nullptr; }
 

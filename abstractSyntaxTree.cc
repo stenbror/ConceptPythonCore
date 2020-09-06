@@ -947,3 +947,13 @@ ASTSimpleFlowStatementNode::ASTSimpleFlowStatementNode(unsigned int start, unsig
     :   ASTStatementNode(start, end, kind), m_Op1(op) { }
 
 std::shared_ptr<Token> ASTSimpleFlowStatementNode::getOperatorOne() { return m_Op1; }
+
+
+// ASTReturnStatementNode /////////////////////////////////////////////////////////////////////////////////////////////
+ASTReturnStatementNode::ASTReturnStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_RETURN), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<Token> ASTReturnStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTReturnStatementNode::getRigth() { return m_Right; }
+
