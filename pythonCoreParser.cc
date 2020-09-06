@@ -388,7 +388,24 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsNames() { retu
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsNames() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedName() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedName() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> dots;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME)  throw ;
+    nodes->push_back(m_CurSymbol);
+    m_Lexer->advance();
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_PERIOD)
+    {
+        dots->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME)  throw ;
+        nodes->push_back(m_CurSymbol);
+        m_Lexer->advance();
+    }
+    return std::make_shared<ASTDottedNameStatementNode>(start, m_Lexer->getPosition(), nodes, dots); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseGlobalStmt() 
 { 

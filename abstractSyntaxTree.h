@@ -1112,6 +1112,23 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Eof;
     };
 
+    class ASTDottedNameStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTDottedNameStatementNode( unsigned int start,
+                                        unsigned int end,
+                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> nodes,
+                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> dots);
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getDots();
+            unsigned int count();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Nodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Dots;
+
+    };
+
 
 
 }

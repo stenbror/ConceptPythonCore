@@ -1077,4 +1077,18 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTEvalInputNode::getNewlin
 std::shared_ptr<Token> ASTEvalInputNode::getEOF() { return m_Eof; }
 
 
+// ASTDottedNameStatementNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTDottedNameStatementNode::ASTDottedNameStatementNode( unsigned int start,
+                                                        unsigned int end,
+                                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> nodes,
+                                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> dots)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DOTTED_NAME), m_Nodes(nodes), m_Dots(dots) { }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDottedNameStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDottedNameStatementNode::getDots() { return m_Dots; }
+
+unsigned int ASTDottedNameStatementNode::count() { return m_Nodes->size(); }
+
+
 //
