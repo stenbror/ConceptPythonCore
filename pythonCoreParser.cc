@@ -265,7 +265,12 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseReturnStmt()
     return std::make_shared<ASTReturnStatementNode>(start, m_Lexer->getPosition(), op, nullptr);;
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseYieldStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseYieldStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto right = parseYieldExpr();
+    return std::make_shared<ASTYieldStatementNode>(start, m_Lexer->getPosition(), right); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseRaiseStmt() { return nullptr; }
 
