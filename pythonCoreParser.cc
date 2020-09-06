@@ -5,9 +5,62 @@ using namespace PythonCore::Runtime;
 // Parser start rules /////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSingleInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSingleInput(std::shared_ptr<PythonCoreTokenizer> lexer) 
+{ 
+    if (lexer == nullptr) return nullptr;
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<Token> newline = nullptr;
+    std::shared_ptr<ASTStatementNode> node = nullptr;
+    m_Lexer->advance();
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_NEWLINE:
+            newline = m_CurSymbol;
+            m_Lexer->advance();
+            break;
+        case Token::TokenKind::PY_IF:
+        case Token::TokenKind::PY_FOR:
+        case Token::TokenKind::PY_WHILE:
+        case Token::TokenKind::PY_TRY:
+        case Token::TokenKind::PY_WITH:
+        case Token::TokenKind::PY_MATRICE:
+        case Token::TokenKind::PY_CLASS:
+        case Token::TokenKind::PY_DEF:
+        case Token::TokenKind::PY_ASYNC:
+            node = parseCompoundStmt();
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE) throw ;
+            newline = m_CurSymbol;
+            m_Lexer->advance();
+            break;
+        default:
+            node = parseSimpleStmt();
+            break;
+    }
+    return std::make_shared<ASTSingleInputNode>(start, m_Lexer->getPosition(), newline, node);
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFileInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFileInput(std::shared_ptr<PythonCoreTokenizer> lexer) 
+{ 
+    if (lexer == nullptr) return nullptr;
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines;
+    m_Lexer->advance();
+    while (m_CurSymbol->kind() != Token::TokenKind::PY_EOF)
+    {
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_NEWLINE)
+        {
+            newlines->push_back(m_CurSymbol);
+            m_Lexer->advance();
+        }
+        else
+        {
+            nodes->push_back(parseStmt());
+        }
+    }
+    auto eof = m_CurSymbol;
+    return std::make_shared<ASTFileInputNode>(start, m_Lexer->getPosition(), nodes, newlines, eof); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseEvalInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
 

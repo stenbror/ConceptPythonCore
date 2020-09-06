@@ -1068,6 +1068,36 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op1;
     };
 
+    class ASTSingleInputNode : public ASTStatementNode
+    {
+        public:
+            ASTSingleInputNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTStatementNode> getRight();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTStatementNode> m_Right;
+    };
+
+    class ASTFileInputNode : public ASTStatementNode
+    {
+        public:
+            ASTFileInputNode(   unsigned int start,
+                                unsigned int end,
+                                std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines,
+                                std::shared_ptr<Token> eof);
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getNewlines();
+            std::shared_ptr<Token> getEOF();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Newlines;
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> m_Nodes;
+            std::shared_ptr<Token> m_Eof;
+    };
+
 }
 
 #endif

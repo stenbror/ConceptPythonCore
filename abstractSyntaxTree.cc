@@ -1040,3 +1040,30 @@ ASTPassStatementNode::ASTPassStatementNode( unsigned int start,
     :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DEL), m_Op1(op) { }
 
 std::shared_ptr<Token> ASTPassStatementNode::getOperatorOne() { return m_Op1; }
+
+
+// ASTSingleInputNode /////////////////////////////////////////////////////////////////////////////////////////////////
+ASTSingleInputNode::ASTSingleInputNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_SINGLE_INPUT), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<Token> ASTSingleInputNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTSingleInputNode::getRight() { return m_Right; }
+
+
+// ASTFileInputNode ///////////////////////////////////////////////////////////////////////////////////////////////////
+ASTFileInputNode::ASTFileInputNode( unsigned int start,
+                                    unsigned int end,
+                                    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                    std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines,
+                                    std::shared_ptr<Token> eof)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_FILE_INPUT), m_Newlines(newlines), m_Nodes(nodes), m_Eof(eof) { }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTFileInputNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTFileInputNode::getNewlines() { return m_Newlines; }
+
+std::shared_ptr<Token> ASTFileInputNode::getEOF() { return m_Eof; }
+
+
+//
