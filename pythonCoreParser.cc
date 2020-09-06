@@ -207,9 +207,22 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseExprStatement() { retu
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDelStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDelStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseExprList();
+    return std::make_shared<ASTDelStatementNode>(start, m_Lexer->getPosition(), op, right); 
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parsePassStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parsePassStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op = m_CurSymbol;
+    m_Lexer->advance();
+    return std::make_shared<ASTPassStatementNode>(start, m_Lexer->getPosition(), op); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFlowStmt() 
 { 

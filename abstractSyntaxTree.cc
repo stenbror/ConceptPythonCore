@@ -1019,3 +1019,24 @@ std::shared_ptr<ASTExpressionNode> ASTAssertStatementNode::getLeft() { return m_
 std::shared_ptr<Token> ASTAssertStatementNode::getOperatorTwo() { return m_Op2; }
 
 std::shared_ptr<ASTExpressionNode> ASTAssertStatementNode::getRight() { return m_Right; }
+
+
+// ASTDelStatementNode ////////////////////////////////////////////////////////////////////////////////////////////////
+ASTDelStatementNode::ASTDelStatementNode(   unsigned int start, 
+                                            unsigned int end, 
+                                            std::shared_ptr<Token> op, 
+                                            std::shared_ptr<ASTExpressionNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DEL), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<Token> ASTDelStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTDelStatementNode::getRight() { return m_Right; }
+
+
+// ASTPassStatementNode ///////////////////////////////////////////////////////////////////////////////////////////////
+ASTPassStatementNode::ASTPassStatementNode( unsigned int start, 
+                                            unsigned int end, 
+                                            std::shared_ptr<Token> op)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DEL), m_Op1(op) { }
+
+std::shared_ptr<Token> ASTPassStatementNode::getOperatorOne() { return m_Op1; }
