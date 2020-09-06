@@ -1066,4 +1066,15 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTFileInputNode::getNewlin
 std::shared_ptr<Token> ASTFileInputNode::getEOF() { return m_Eof; }
 
 
+// ASTEvalInputNode ///////////////////////////////////////////////////////////////////////////////////////////////////
+ASTEvalInputNode::ASTEvalInputNode(unsigned int start, unsigned int end, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines, std::shared_ptr<Token> eof)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_EVAL_INPUT), m_Newlines(newlines), m_Right(right), m_Eof(eof) { }
+
+std::shared_ptr<ASTExpressionNode> ASTEvalInputNode::getRight() { return m_Right; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTEvalInputNode::getNewlines() { return m_Newlines; }
+
+std::shared_ptr<Token> ASTEvalInputNode::getEOF() { return m_Eof; }
+
+
 //

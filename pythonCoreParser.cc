@@ -58,11 +58,23 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFileInput(std::shared_
             nodes->push_back(parseStmt());
         }
     }
-    auto eof = m_CurSymbol;
-    return std::make_shared<ASTFileInputNode>(start, m_Lexer->getPosition(), nodes, newlines, eof); 
+    return std::make_shared<ASTFileInputNode>(start, m_Lexer->getPosition(), nodes, newlines, m_CurSymbol); 
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseEvalInput(std::shared_ptr<PythonCoreTokenizer> lexer) { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseEvalInput(std::shared_ptr<PythonCoreTokenizer> lexer) 
+{ 
+    if (lexer == nullptr) return nullptr;
+    unsigned int start = m_Lexer->getPosition();
+    auto right = parseTestList();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines;
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_NEWLINE)
+    {
+        newlines->push_back(m_CurSymbol);
+        m_Lexer->advance();
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_EOF) throw ;
+    return std::make_shared<ASTEvalInputNode>(start, m_Lexer->getPosition(), right, newlines, m_CurSymbol); 
+}
 
 
 // Statement rules ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1098,6 +1098,22 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Eof;
     };
 
+    class ASTEvalInputNode : public ASTStatementNode
+    {
+        public:
+            ASTEvalInputNode(unsigned int start, unsigned int end, std::shared_ptr<ASTExpressionNode> right, std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines, std::shared_ptr<Token> eof);
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getNewlines();
+            std::shared_ptr<Token> getEOF();
+
+        protected:
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Newlines;
+            std::shared_ptr<Token> m_Eof;
+    };
+
+
+
 }
 
 #endif
