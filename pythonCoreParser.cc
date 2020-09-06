@@ -196,11 +196,32 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseParameters()
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTypedArgsList() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTFPDef() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTFPDef() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    auto op1 = m_CurSymbol; // 'NAME'
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COLON)
+    {
+        auto op2 = m_CurSymbol; // ':'
+        m_Lexer->advance();
+        auto right = parseTest();
+        return std::make_shared<ASTDefStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_VFP_DEF, op1, op2, right);
+    }
+    return std::make_shared<ASTDefStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_VFP_DEF, op1, nullptr, nullptr);
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVarArgsList() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVFPDef() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVFPDef() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    auto op1 = m_CurSymbol; // 'NAME'
+    m_Lexer->advance();
+    return std::make_shared<ASTDefStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_VFP_DEF, op1, nullptr, nullptr);
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseStmt() 
 { 

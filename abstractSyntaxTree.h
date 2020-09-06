@@ -1217,6 +1217,20 @@ namespace PythonCore::Runtime
             std::shared_ptr<Token> m_Op4;
     };
 
+    class ASTDefStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTDefStatementNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<ASTExpressionNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTExpressionNode> getRight();       
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+    };
+
     
 
 

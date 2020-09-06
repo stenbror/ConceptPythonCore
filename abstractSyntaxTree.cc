@@ -1166,5 +1166,15 @@ std::shared_ptr<ASTStatementNode> ASTFromImportStatementNode::getLeft() { return
 std::shared_ptr<ASTStatementNode> ASTFromImportStatementNode::getRight() { return m_Right; }
 
 
-//
+// ASTDefStatementNode ////////////////////////////////////////////////////////////////////////////////////////////////
+ASTDefStatementNode::ASTDefStatementNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<ASTExpressionNode> right)
+    :   ASTStatementNode(start, end, kind), m_Op1(op1), m_Op2(op2), m_Right(right) { }
 
+std::shared_ptr<Token> ASTDefStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTDefStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTDefStatementNode::getRight() { return m_Right; }
+
+
+//
