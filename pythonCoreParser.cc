@@ -293,7 +293,10 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseRaiseStmt()
     return std::make_shared<ASTRaiseStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right); 
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportStmt() 
+{ 
+    return m_CurSymbol->kind() == Token::TokenKind::PY_IMPORT ? parseImportName() : parseImportFrom();
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportName() { return nullptr; }
 
@@ -309,9 +312,51 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsNames() { retu
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedName() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseGlobalStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseGlobalStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_NAME)
+    {
+        nodes->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_NAME) throw ;
+        else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            separators->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+        }
+    }
+    return std::make_shared<ASTGlobalNonLocalStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_GLOBAL_STMT, op1, nodes, separators); 
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseNonlocalStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseNonlocalStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_NAME)
+    {
+        nodes->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_NAME) throw ;
+        else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            separators->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+        }
+    }
+    return std::make_shared<ASTGlobalNonLocalStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_NONLOCAL_STMT, op1, nodes, separators); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseAssertStmt() { return nullptr; }
 

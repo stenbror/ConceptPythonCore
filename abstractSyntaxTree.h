@@ -1004,6 +1004,27 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> m_Right;
     };
 
+    class ASTGlobalNonLocalStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTGlobalNonLocalStatementNode( unsigned int start,
+                                            unsigned int end,
+                                            ASTNode::NodeKind kind,
+                                            std::shared_ptr<Token> op1,
+                                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> nodes,
+                                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators
+                                            );
+            unsigned int count();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getSeparators();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Nodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Separators;
+    };
+
 }
 
 #endif
