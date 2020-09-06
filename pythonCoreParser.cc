@@ -291,7 +291,47 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSmallStmt()
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseExprStatement() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() { return nullptr; }
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto node = m_CurSymbol->kind() == Token::TokenKind::PY_MUL ? parseStarExpr() : parseTest();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas;
+    nodes->push_back(node);
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        commas->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        switch (m_CurSymbol->kind())
+        {
+            case Token::TokenKind::PY_SEMICOLON:
+            case Token::TokenKind::PY_NEWLINE:
+            case Token::TokenKind::PY_TYPE_COMMENT:
+            case Token::TokenKind::PY_COLON:
+            case Token::TokenKind::PY_PLUS_ASSIGN:
+            case Token::TokenKind::PY_MINUS_ASSIGN:
+            case Token::TokenKind::PY_MUL_ASSIGN:
+            case Token::TokenKind::PY_POWER_ASSIGN:
+            case Token::TokenKind::PY_MODULO_ASSIGN:
+            case Token::TokenKind::PY_MATRICE_ASSIGN:
+            case Token::TokenKind::PY_BIT_AND_ASSIGN:
+            case Token::TokenKind::PY_BIT_OR_ASSIGN:
+            case Token::TokenKind::PY_BIT_XOR_ASSIGN:
+            case Token::TokenKind::PY_SHIFT_LEFT_ASSIGN:
+            case Token::TokenKind::PY_SHIFT_RIGHT_ASSIGN:
+            case Token::TokenKind::PY_DIV_ASSIGN:
+            case Token::TokenKind::PY_FLOOR_DIV_ASSIGN:
+            case Token::TokenKind::PY_ASSIGN:
+                break;
+            case Token::TokenKind::PY_COMMA:
+                throw ;
+            default:
+                nodes->push_back(m_CurSymbol->kind() == Token::TokenKind::PY_MUL ? parseStarExpr() : parseTest());
+                break;
+        }
+    }
+    return std::make_shared<ASTTestListCompStatementNode>(start, m_Lexer->getPosition(), nodes, commas); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDelStmt() 
 { 

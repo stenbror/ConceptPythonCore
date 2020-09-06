@@ -1231,6 +1231,18 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> m_Right;
     };
 
+    class ASTTestListCompStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTTestListCompStatementNode(unsigned int start, unsigned int end, std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes, std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas);
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getCommas();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Nodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Commas;
+    };
+
     
 
 

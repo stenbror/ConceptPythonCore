@@ -1177,4 +1177,13 @@ std::shared_ptr<Token> ASTDefStatementNode::getOperatorTwo() { return m_Op2; }
 std::shared_ptr<ASTExpressionNode> ASTDefStatementNode::getRight() { return m_Right; }
 
 
+// ASTTestListCompStatementNod ////////////////////////////////////////////////////////////////////////////////////////
+ASTTestListCompStatementNode::ASTTestListCompStatementNode(unsigned int start, unsigned int end, std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes, std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_TEST_LIST_COMP), m_Nodes(nodes), m_Commas(commas) {}
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTTestListCompStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTTestListCompStatementNode::getCommas() { return m_Commas; }
+
+
 //
