@@ -376,7 +376,14 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportStmt()
     return m_CurSymbol->kind() == Token::TokenKind::PY_IMPORT ? parseImportName() : parseImportFrom();
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportName() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportName() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    auto right = parseDottedAsNames();
+    return std::make_shared<ASTImportStatementNode>(start, m_Lexer->getPosition(), op1, right); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportFrom() { return nullptr; }
 

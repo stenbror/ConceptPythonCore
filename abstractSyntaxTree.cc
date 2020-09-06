@@ -1128,4 +1128,13 @@ std::shared_ptr<Token> ASTImportAsNameStatementNode::getOperatorTwo() { return m
 std::shared_ptr<Token> ASTImportAsNameStatementNode::getOperatorThree() { return m_Op3; }
 
 
+// ASTImportStatementNode /////////////////////////////////////////////////////////////////////////////////////////////
+ASTImportStatementNode::ASTImportStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<ASTStatementNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_IMPORT_NAME), m_Op1(op1), m_Right(right) { }
+
+std::shared_ptr<Token> ASTImportStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTImportStatementNode::getRight() { return m_Right; }
+
+
 //
