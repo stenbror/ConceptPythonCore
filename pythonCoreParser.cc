@@ -289,7 +289,139 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseSmallStmt()
     }
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseExprStatement() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseExprStatement() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseTestListStarExpr();
+    switch (m_CurSymbol->kind())
+    {
+        case Token::TokenKind::PY_PLUS_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_PLUS_ASSIGN, left, op1, right);
+            }            
+        case Token::TokenKind::PY_MINUS_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_MINUS_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_MUL_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_MUL_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_POWER_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_POWER_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_MODULO_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_MODULO_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_MATRICE_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_MATRICE_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_BIT_AND_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_BIT_AND_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_BIT_OR_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_BIT_OR_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_BIT_XOR_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_BIT_XOR_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_SHIFT_LEFT_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_SHIFT_LEFT_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_SHIFT_RIGHT_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_SHIFT_RIGHT_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_DIV_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_DIV_ASSIGN, left, op1, right);
+            }      
+        case Token::TokenKind::PY_FLOOR_DIV_ASSIGN:
+            {
+                auto op1 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldExpr() : parseTestList();
+                return std::make_shared<ASTOperatorAssignmentStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_FLOOR_DIV_ASSIGN, left, op1, right);
+            }
+        case Token::TokenKind::PY_COLON:
+            {
+                auto op2 = m_CurSymbol;
+                m_Lexer->advance();
+                auto right = parseTest();
+                auto first = std::make_shared<ASTAnnotationStatementNode>(start, m_Lexer->getPosition(), left, op2, right);
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+                {
+                    auto op3 = m_CurSymbol;
+                    m_Lexer->advance();
+                    auto next = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldStmt() : parseTestListStarExpr();
+                    return std::make_shared<ASTAssignStatementNode>(start, m_Lexer->getPosition(), first, op3, next, nullptr);
+                }
+                return first;
+            }
+        case Token::TokenKind::PY_ASSIGN:
+            {
+                std::shared_ptr<ASTStatementNode> res = left;
+                while (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+                {
+                    auto op = m_CurSymbol;
+                    m_Lexer->advance();
+                    auto right = m_CurSymbol->kind() == Token::TokenKind::PY_YIELD ? parseYieldStmt() : parseTestListStarExpr();
+                    std::shared_ptr<ASTExpressionNode> comment = nullptr;
+                    if (m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                    {
+                        // Handle Type Comment later!
+                    }
+                    res = std::make_shared<ASTAssignStatementNode>(start, m_Lexer->getPosition(), res, op, right, comment);
+                }
+                return res;
+            }     
+        default:
+            return left;
+    }
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseTestListStarExpr() 
 { 

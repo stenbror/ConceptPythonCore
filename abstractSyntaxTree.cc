@@ -1186,4 +1186,39 @@ std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTTestListComp
 std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTTestListCompStatementNode::getCommas() { return m_Commas; }
 
 
+// ASTOperatorAssignmentStatementNode /////////////////////////////////////////////////////////////////////////////////
+ASTOperatorAssignmentStatementNode::ASTOperatorAssignmentStatementNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op, std::shared_ptr<ASTExpressionNode> right)
+    :   ASTStatementNode(start, end, kind), m_Left(left), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<ASTStatementNode> ASTOperatorAssignmentStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTOperatorAssignmentStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTOperatorAssignmentStatementNode::getRight() { return m_Right; }
+
+
+// ASTAnnotationStatementNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTAnnotationStatementNode::ASTAnnotationStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op, std::shared_ptr<ASTExpressionNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_ANN_ASSIGN), m_Left(left), m_Op1(op), m_Right(right) { }
+
+std::shared_ptr<ASTStatementNode> ASTAnnotationStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTAnnotationStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTAnnotationStatementNode::getRight() { return m_Right; }
+
+
+// ASTAssignStatementNode /////////////////////////////////////////////////////////////////////////////////////////////
+ASTAssignStatementNode::ASTAssignStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right, std::shared_ptr<ASTExpressionNode> comment)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_ASSIGN), m_Left(left), m_Op1(op), m_Right(right), m_Comment(comment) { }
+
+std::shared_ptr<ASTStatementNode> ASTAssignStatementNode::getLeft() { return m_Left;}
+
+std::shared_ptr<Token> ASTAssignStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTStatementNode> ASTAssignStatementNode::getRight() { return m_Right; }
+
+std::shared_ptr<ASTExpressionNode> ASTAssignStatementNode::getComment() { return m_Comment; }
+
+
 //

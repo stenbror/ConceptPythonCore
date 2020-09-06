@@ -1243,6 +1243,51 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Commas;
     };
 
+    class ASTOperatorAssignmentStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTOperatorAssignmentStatementNode(unsigned int start, unsigned int end, ASTNode::NodeKind kind, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op, std::shared_ptr<ASTExpressionNode> right);
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+
+        protected:
+            std::shared_ptr<ASTStatementNode> m_Left;
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+    };
+
+    class ASTAnnotationStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTAnnotationStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op, std::shared_ptr<ASTExpressionNode> right);
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+
+        protected:
+            std::shared_ptr<ASTStatementNode> m_Left;
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+    };
+
+    class ASTAssignStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTAssignStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op, std::shared_ptr<ASTStatementNode> right, std::shared_ptr<ASTExpressionNode> comment);
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTStatementNode> getRight();
+            std::shared_ptr<ASTExpressionNode> getComment();
+
+        protected:
+            std::shared_ptr<ASTStatementNode> m_Left;
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTStatementNode> m_Right;
+            std::shared_ptr<ASTExpressionNode> m_Comment;
+
+    };
+
     
 
 
