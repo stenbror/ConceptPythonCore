@@ -384,9 +384,54 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsName() { retur
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsName() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsNames() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsNames() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas;
+    auto node = parseImportAsName();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        commas->push_back(m_CurSymbol);
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_SEMICOLON && m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE)
+        {
+            nodes->push_back(node); // First node
+            nodes->push_back(parseImportAsName()); // second node
+            while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+            {
+                commas->push_back(m_CurSymbol);
+                m_Lexer->advance();
+                if (m_CurSymbol->kind() != Token::TokenKind::PY_SEMICOLON && m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE)
+                {
+                    nodes->push_back(parseImportAsName());
+                }
+            }
+        }
+        return std::make_shared<ASTImportContainerStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_IMPORT_AS_NAMES, nodes, commas);
+    }
+    return node; 
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsNames() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsNames() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas;
+    auto node = parseDottedAsName();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        nodes->push_back(node);
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            commas->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            nodes->push_back(parseDottedAsName());
+        }
+        return std::make_shared<ASTImportContainerStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_DOTTED_AS_NAMES, nodes, commas);
+    }
+    return node; 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedName() 
 { 

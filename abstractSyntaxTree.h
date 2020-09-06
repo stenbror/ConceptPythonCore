@@ -1129,6 +1129,25 @@ namespace PythonCore::Runtime
 
     };
 
+    class ASTImportContainerStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTImportContainerStatementNode(    unsigned int start,
+                                                unsigned int end,
+                                                ASTNode::NodeKind kind,
+                                                std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                                std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas);
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> getNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> getCommas();
+            unsigned int count();
+
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> m_Nodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Commas;
+    };
+
+    
+
 
 
 }

@@ -1091,4 +1091,19 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTDottedNameStatementNode:
 unsigned int ASTDottedNameStatementNode::count() { return m_Nodes->size(); }
 
 
+// ASTImportContainerStatementNode ////////////////////////////////////////////////////////////////////////////////////
+ASTImportContainerStatementNode::ASTImportContainerStatementNode(   unsigned int start,
+                                                                    unsigned int end,
+                                                                    ASTNode::NodeKind kind,
+                                                                    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                                                    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas)
+    :   ASTStatementNode(start, end, kind), m_Nodes(nodes), m_Commas(commas) { }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTImportContainerStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTImportContainerStatementNode::getCommas() { return m_Commas; }
+
+unsigned int ASTImportContainerStatementNode::count() { return m_Nodes->size(); }
+
+
 //
