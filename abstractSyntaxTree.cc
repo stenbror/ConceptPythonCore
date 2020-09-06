@@ -1137,4 +1137,34 @@ std::shared_ptr<Token> ASTImportStatementNode::getOperatorOne() { return m_Op1; 
 std::shared_ptr<ASTStatementNode> ASTImportStatementNode::getRight() { return m_Right; }
 
 
+// ASTFromImportStatementNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTFromImportStatementNode::ASTFromImportStatementNode( unsigned int start,
+                                                        unsigned int end,
+                                                        std::shared_ptr<Token> op1,
+                                                        std::shared_ptr<std::vector<std::shared_ptr<Token>>> dots,
+                                                        std::shared_ptr<ASTStatementNode> left,
+                                                        std::shared_ptr<Token> op2,
+                                                        std::shared_ptr<Token> op3,
+                                                        std::shared_ptr<ASTStatementNode> right,
+                                                        std::shared_ptr<Token> op4)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_IMPORT_FROM), m_Op1(op1), m_Op2(op2), m_Op3(op3), m_Op4(op4), m_Dots(dots), m_Left(left), m_Right(right) { }
+
+std::shared_ptr<Token> ASTFromImportStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTFromImportStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTFromImportStatementNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<Token> ASTFromImportStatementNode::getOperatorFour() { return m_Op4; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTFromImportStatementNode::getDots() { return m_Dots; }
+
+unsigned int ASTFromImportStatementNode::count() { return m_Dots->size(); }
+
+std::shared_ptr<ASTStatementNode> ASTFromImportStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<ASTStatementNode> ASTFromImportStatementNode::getRight() { return m_Right; }
+
+
 //
+

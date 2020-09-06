@@ -385,7 +385,45 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportName()
     return std::make_shared<ASTImportStatementNode>(start, m_Lexer->getPosition(), op1, right); 
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportFrom() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportFrom() 
+{   
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol; // 'from'
+    m_Lexer->advance();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> dots;
+    std::shared_ptr<ASTStatementNode> left = nullptr;
+    bool seenDots = false;
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_PERIOD || m_CurSymbol->kind() == Token::TokenKind::PY_ELIPSIS)
+    {
+        seenDots = true;
+        dots->push_back(m_CurSymbol);
+        m_Lexer->advance();
+    }
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_IMPORT && !seenDots) throw ;
+    else if (m_CurSymbol->kind() != Token::TokenKind::PY_IMPORT) left = parseDottedName();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_IMPORT) throw ;
+    auto op2 = m_CurSymbol; // 'import'
+    m_Lexer->advance();
+    std::shared_ptr<Token> op3 = nullptr;
+    std::shared_ptr<ASTStatementNode> right = nullptr;
+    std::shared_ptr<Token> op4 = nullptr;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+    {
+        op3 = m_CurSymbol;
+        m_Lexer->advance();
+    }
+    else if (m_CurSymbol->kind() == Token::TokenKind::PY_LEFT_PAREN)
+    {
+        op3 = m_CurSymbol;
+        m_Lexer->advance();
+        right = parseImportAsNames();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+        op4 = m_CurSymbol;
+        m_Lexer->advance();
+    }
+    else right = parseImportAsNames();
+    return std::make_shared<ASTFromImportStatementNode>(start, m_Lexer->getPosition(), op1, dots, left, op2, op3, right, op4); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsName() 
 { 
