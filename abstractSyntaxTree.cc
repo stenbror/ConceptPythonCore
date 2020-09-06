@@ -957,3 +957,28 @@ std::shared_ptr<Token> ASTReturnStatementNode::getOperatorOne() { return m_Op1; 
 
 std::shared_ptr<ASTStatementNode> ASTReturnStatementNode::getRigth() { return m_Right; }
 
+
+// ASTYieldStatementNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTYieldStatementNode::ASTYieldStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTExpressionNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_YIELD_STMT), m_Right(right) { }
+
+std::shared_ptr<ASTExpressionNode> ASTYieldStatementNode::getRight() { return m_Right; }
+
+
+// ASTRaiseStatementNode //////////////////////////////////////////////////////////////////////////////////////////////
+ASTRaiseStatementNode::ASTRaiseStatementNode(   unsigned int start, 
+                                                unsigned int end,
+                                                std::shared_ptr<Token> op1,
+                                                std::shared_ptr<ASTExpressionNode> left,
+                                                std::shared_ptr<Token> op2,
+                                                std::shared_ptr<ASTExpressionNode> right
+                                            ) 
+    : ASTStatementNode(start, end, ASTNode::NodeKind::NK_RAISE), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right) { }
+
+std::shared_ptr<Token> ASTRaiseStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTRaiseStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTRaiseStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTRaiseStatementNode::getRight() { return m_Right; }
