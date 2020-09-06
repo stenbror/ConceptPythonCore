@@ -380,9 +380,40 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportName() { return 
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportFrom() { return nullptr; }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsName() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsName() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    std::shared_ptr<Token> op2 = nullptr;
+    std::shared_ptr<Token> op3 = nullptr;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_AS)
+    {
+        op2 = m_CurSymbol;
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+        op3 = m_CurSymbol;
+        m_Lexer->advance();
+    }
+    return std::make_shared<ASTImportAsNameStatementNode>(start, m_Lexer->getPosition(), op1, op2, op3); 
+}
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsName() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseDottedAsName() 
+{
+    unsigned int start = m_Lexer->getPosition();
+    auto left = parseDottedName();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_AS)
+    {
+        auto op1 = m_CurSymbol;
+        m_Lexer->advance();
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_NAME) throw ;
+        auto op2 = m_CurSymbol;
+        m_Lexer->advance();
+        return std::make_shared<ASTDottedNameAsStatementNode>(start, m_Lexer->getPosition(), left, op1, op2);
+    }
+    return left; 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseImportAsNames() 
 { 

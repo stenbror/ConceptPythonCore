@@ -1146,6 +1146,34 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Commas;
     };
 
+    class ASTDottedNameAsStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTDottedNameAsStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2);
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+
+        protected:
+            std::shared_ptr<ASTStatementNode> m_Left;
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+    };
+
+    class ASTImportAsNameStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTImportAsNameStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<Token> op3);;
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<Token> getOperatorThree();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<Token> m_Op3;
+    };
+
     
 
 

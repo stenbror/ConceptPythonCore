@@ -1106,4 +1106,26 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTImportContainerStatement
 unsigned int ASTImportContainerStatementNode::count() { return m_Nodes->size(); }
 
 
+// ASTDottedNameAsStatementNode ///////////////////////////////////////////////////////////////////////////////////////
+ASTDottedNameAsStatementNode::ASTDottedNameAsStatementNode(unsigned int start, unsigned int end, std::shared_ptr<ASTStatementNode> left, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_DOTTED_AS_NAME), m_Left(left), m_Op1(op1), m_Op2(op2) { }
+
+std::shared_ptr<ASTStatementNode> ASTDottedNameAsStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTDottedNameAsStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTDottedNameAsStatementNode::getOperatorTwo() { return m_Op2; }
+
+
+// ASTImportAsNameStatementNode ///////////////////////////////////////////////////////////////////////////////////////
+ASTImportAsNameStatementNode::ASTImportAsNameStatementNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1, std::shared_ptr<Token> op2, std::shared_ptr<Token> op3)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_IMPORT_AS_NAME), m_Op1(op1), m_Op2(op2), m_Op3(op3) { }
+
+std::shared_ptr<Token> ASTImportAsNameStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<Token> ASTImportAsNameStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTImportAsNameStatementNode::getOperatorThree() { return m_Op3; }
+
+
 //
