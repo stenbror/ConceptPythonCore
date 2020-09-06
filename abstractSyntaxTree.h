@@ -1025,6 +1025,27 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> m_Separators;
     };
 
+    class ASTAssertStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTAssertStatementNode( unsigned int start, 
+                                    unsigned int end, 
+                                    std::shared_ptr<Token> op1, 
+                                    std::shared_ptr<ASTExpressionNode> left, 
+                                    std::shared_ptr<Token> op2, 
+                                    std::shared_ptr<ASTExpressionNode> right);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getLeft();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<ASTExpressionNode> getRight();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Left;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+    };
+
 }
 
 #endif

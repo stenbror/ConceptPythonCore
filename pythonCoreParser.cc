@@ -358,7 +358,21 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseNonlocalStmt()
     return std::make_shared<ASTGlobalNonLocalStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_NONLOCAL_STMT, op1, nodes, separators); 
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseAssertStmt() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseAssertStmt() 
+{ 
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol;
+    m_Lexer->advance();
+    auto left = parseTest();
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+    {
+        auto op2 = m_CurSymbol;
+        m_Lexer->advance();
+        auto right = parseTest();
+        return std::make_shared<ASTAssertStatementNode>(start, m_Lexer->getPosition(), op1, left, op2, right);
+    }
+    return std::make_shared<ASTAssertStatementNode>(start, m_Lexer->getPosition(), op1, left, nullptr, nullptr); 
+}
 
 std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCompoundStmt() 
 { 

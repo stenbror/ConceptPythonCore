@@ -1001,3 +1001,21 @@ std::shared_ptr<Token> ASTGlobalNonLocalStatementNode::getOperatorOne() { return
 std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTGlobalNonLocalStatementNode::getNodes() { return m_Nodes; }
 
 std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTGlobalNonLocalStatementNode::getSeparators() { return m_Separators; }
+
+
+// ASTAssertStatementNode /////////////////////////////////////////////////////////////////////////////////////////////
+ASTAssertStatementNode::ASTAssertStatementNode( unsigned int start, 
+                                                unsigned int end, 
+                                                std::shared_ptr<Token> op1, 
+                                                std::shared_ptr<ASTExpressionNode> left, 
+                                                std::shared_ptr<Token> op2, 
+                                                std::shared_ptr<ASTExpressionNode> right)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_ASSERT_STMT), m_Op1(op1), m_Left(left), m_Op2(op2), m_Right(right) { }
+
+std::shared_ptr<Token> ASTAssertStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTAssertStatementNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTAssertStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTAssertStatementNode::getRight() { return m_Right; }
