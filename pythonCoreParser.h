@@ -97,6 +97,13 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> parseCompIf();
             std::shared_ptr<ASTExpressionNode> parseYieldExpr();
 
+        public:
+            std::shared_ptr<ASTExpressionNode> parseFuncTypeInput(PythonCoreTokenizer lexer);
+
+        protected:
+            std::shared_ptr<ASTExpressionNode> parseFuncType();
+            std::shared_ptr<ASTExpressionNode> parseTypeList();
+
 
         protected:
             std::shared_ptr<Token> m_CurSymbol;

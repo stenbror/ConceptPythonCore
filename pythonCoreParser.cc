@@ -2063,3 +2063,22 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseYieldExpr()
     auto right = parseTestListStarExpr();
     return std::make_shared<ASTYieldExpression>(start, m_Lexer->getPosition(), op1, right); 
 }
+
+
+// Func ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncTypeInput(PythonCoreTokenizer lexer)
+{
+    return nullptr;
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncType()
+{
+    return nullptr;
+}
+
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTypeList()
+{
+    return nullptr;
+}
