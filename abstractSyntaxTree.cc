@@ -1221,4 +1221,30 @@ std::shared_ptr<ASTStatementNode> ASTAssignStatementNode::getRight() { return m_
 std::shared_ptr<ASTExpressionNode> ASTAssignStatementNode::getComment() { return m_Comment; }
 
 
+// ASTFuncBodySuiteStatementNode //////////////////////////////////////////////////////////////////////////////////////
+ASTFuncBodySuiteStatementNode::ASTFuncBodySuiteStatementNode(   unsigned int start,
+                                                                unsigned int end,
+                                                                std::shared_ptr<Token> op1,
+                                                                std::shared_ptr<ASTExpressionNode> comment,
+                                                                std::shared_ptr<Token> op2,
+                                                                std::shared_ptr<Token> op3,
+                                                                std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                                                std::shared_ptr<Token> op4)
+    :   ASTStatementNode(start, end, ASTNode::NodeKind::NK_FUNC_BODY_SUITE), m_Op1(op1), m_Comment(comment), m_Op2(op2), m_Op3(op3), m_Nodes(nodes), m_Op4(op4) { }
+
+std::shared_ptr<Token> ASTFuncBodySuiteStatementNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTFuncBodySuiteStatementNode::getComment() { return m_Comment; }
+
+std::shared_ptr<Token> ASTFuncBodySuiteStatementNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTFuncBodySuiteStatementNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> ASTFuncBodySuiteStatementNode::getNodes() { return m_Nodes; }
+
+std::shared_ptr<Token> ASTFuncBodySuiteStatementNode::getOperatorFour() { return m_Op4; }
+
+unsigned int ASTFuncBodySuiteStatementNode::count() { return m_Nodes->size(); }
+
+
 //

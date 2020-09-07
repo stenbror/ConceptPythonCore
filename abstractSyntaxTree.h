@@ -1288,6 +1288,34 @@ namespace PythonCore::Runtime
 
     };
 
+    class ASTFuncBodySuiteStatementNode : public ASTStatementNode
+    {
+        public:
+            ASTFuncBodySuiteStatementNode(  unsigned int start,
+                                            unsigned int end,
+                                            std::shared_ptr<Token> op1,
+                                            std::shared_ptr<ASTExpressionNode> comment,
+                                            std::shared_ptr<Token> op2,
+                                            std::shared_ptr<Token> op3,
+                                            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes,
+                                            std::shared_ptr<Token> op4);
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getComment();
+            std::shared_ptr<Token> getOperatorTwo();
+            std::shared_ptr<Token> getOperatorThree();
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> getNodes();
+            std::shared_ptr<Token> getOperatorFour();
+            unsigned int count();
+
+        protected:
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Comment;
+            std::shared_ptr<Token> m_Op2;
+            std::shared_ptr<Token> m_Op3;
+            std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> m_Nodes;
+            std::shared_ptr<Token> m_Op4;
+    };
+
     
 
 

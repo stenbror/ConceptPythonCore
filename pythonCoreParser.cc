@@ -1058,7 +1058,38 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseClassDef()
     return std::make_shared<ASTClassDefStatementNode>(start, m_Lexer->getPosition(), op1, op2, op3, left, op4, op5, right);
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFuncBodySuite() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseFuncBodySuite() 
+{ 
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_NEWLINE)
+    {
+        unsigned int start = m_Lexer->getPosition();
+        auto op1 = m_CurSymbol; // 'NEWLINE'
+        m_CurSymbol = m_Lexer->advance();
+        std::shared_ptr<Token> op2 = nullptr;
+        std::shared_ptr<ASTExpressionNode> comment = nullptr;
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+        {
+            // Handle Type comment.
+
+            if (m_CurSymbol->kind() != Token::TokenKind::PY_NEWLINE) throw ;
+            op2 = m_CurSymbol; // 'NEWLINE'
+            m_CurSymbol = m_Lexer->advance();
+        }
+        if (m_CurSymbol->kind() != Token::TokenKind::PY_INDENT) throw ;
+        auto op3 = m_CurSymbol; // 'INDENT'
+        m_CurSymbol = m_Lexer->advance();
+        std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+        nodes->push_back(parseStmt());
+        while (m_CurSymbol->kind() != Token::TokenKind::PY_DEDENT)
+        {
+            nodes->push_back(parseStmt());
+        }
+        auto op4 = m_CurSymbol; // 'DEDENT'
+        m_CurSymbol = m_Lexer->advance();
+        return std::make_shared<ASTFuncBodySuiteStatementNode>(start, m_Lexer->getPosition(), op1, comment, op2, op3, nodes, op4);
+    }
+    return parseSimpleStmt(); 
+}
 
 
 // Expression rules ///////////////////////////////////////////////////////////////////////////////////////////////////
