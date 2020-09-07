@@ -1262,4 +1262,25 @@ std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTFuncTypeInput::getNewlin
 std::shared_ptr<Token> ASTFuncTypeInput::getEof() { return m_Eof; }
 
 
+// ASTFuncTypeExpressionNode //////////////////////////////////////////////////////////////////////////////////////////
+ASTFuncTypeExpressionNode::ASTFuncTypeExpressionNode(   unsigned int start, 
+                                                        unsigned int end, 
+                                                        std::shared_ptr<Token> op1, 
+                                                        std::shared_ptr<ASTExpressionNode> left, 
+                                                        std::shared_ptr<Token> op2, 
+                                                        std::shared_ptr<Token> op3, 
+                                                        std::shared_ptr<ASTExpressionNode> right)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_FUNC_TYPE), m_Op1(op1), m_Left(left), m_Op2(op2), m_Op3(op3), m_Right(right) { }
+
+std::shared_ptr<Token> ASTFuncTypeExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTFuncTypeExpressionNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTFuncTypeExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<Token> ASTFuncTypeExpressionNode::getOperatorThree() { return m_Op3; }
+
+std::shared_ptr<ASTExpressionNode> ASTFuncTypeExpressionNode::getRight() { return m_Right; }
+
+
 //

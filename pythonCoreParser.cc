@@ -2086,7 +2086,19 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncTypeInput(std::sha
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncType()
 {
-    return nullptr;
+    unsigned int start = m_Lexer->getPosition();
+    auto op1 = m_CurSymbol; // '('
+    m_Lexer->advance();
+    std::shared_ptr<ASTExpressionNode> left = nullptr;
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) left = parseTypeList();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_RIGHT_PAREN) throw ;
+    auto op2 = m_CurSymbol; // ')'
+    m_Lexer->advance();
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_ARROW) throw ;
+    auto op3 = m_CurSymbol; // '->'
+    m_Lexer->advance();
+    auto right = parseTest();
+    return std::make_shared<ASTFuncTypeExpressionNode>(start, m_Lexer->getPosition(), op1, left, op2, op3, right);
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTypeList()
