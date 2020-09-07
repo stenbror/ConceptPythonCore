@@ -1247,4 +1247,19 @@ std::shared_ptr<Token> ASTFuncBodySuiteStatementNode::getOperatorFour() { return
 unsigned int ASTFuncBodySuiteStatementNode::count() { return m_Nodes->size(); }
 
 
+// ASTFuncTypeInput ///////////////////////////////////////////////////////////////////////////////////////////////////
+ASTFuncTypeInput::ASTFuncTypeInput( unsigned int start, 
+                                    unsigned int end, 
+                                    std::shared_ptr<ASTExpressionNode> right, 
+                                    std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines, 
+                                    std::shared_ptr<Token> eof)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_FUNC_TYPE_INPUT), m_Right(right), m_Newlines(newlines), m_Eof(eof) { }
+
+std::shared_ptr<ASTExpressionNode> ASTFuncTypeInput::getRight() { return m_Right; }
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> ASTFuncTypeInput::getNewlines() { return m_Newlines; }
+
+std::shared_ptr<Token> ASTFuncTypeInput::getEof() { return m_Eof; }
+
+
 //

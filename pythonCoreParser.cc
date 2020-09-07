@@ -2068,9 +2068,20 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseYieldExpr()
 // Func ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncTypeInput(PythonCoreTokenizer lexer)
+std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncTypeInput(std::shared_ptr<PythonCoreTokenizer> lexer)
 {
-    return nullptr;
+    if (lexer == nullptr) return nullptr;
+    unsigned int start = m_Lexer->getPosition();
+    m_Lexer->advance();
+    auto right = parseFuncType();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines;
+    while (m_CurSymbol->kind() == Token::TokenKind::PY_NEWLINE)
+    {
+        newlines->push_back(m_CurSymbol);
+        m_Lexer->advance();
+    }
+    if (m_CurSymbol->kind() != Token::TokenKind::PY_EOF) throw ;
+    return std::make_shared<ASTFuncTypeInput>(start, m_Lexer->getPosition(), right, newlines, m_CurSymbol);
 }
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncType()

@@ -98,7 +98,7 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTExpressionNode> parseYieldExpr();
 
         public:
-            std::shared_ptr<ASTExpressionNode> parseFuncTypeInput(PythonCoreTokenizer lexer);
+            std::shared_ptr<ASTExpressionNode> parseFuncTypeInput(std::shared_ptr<PythonCoreTokenizer> lexer);
 
         protected:
             std::shared_ptr<ASTExpressionNode> parseFuncType();
