@@ -2182,5 +2182,5 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTypeList()
             }
         }
     }
-    return std::make_shared<ASTTypeListExpressionNode>(start, m_Lexer->getPosition(), mul, mulNode, power, powerNode, nodes);
+    return std::make_shared<ASTTypeListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TYPE_LIST, mul, mulNode, power, powerNode, nodes);
 }

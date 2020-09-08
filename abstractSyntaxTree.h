@@ -1359,6 +1359,7 @@ namespace PythonCore::Runtime
         public:
             ASTTypeListExpressionNode(  unsigned int start,
                                         unsigned int end,
+                                        ASTNode::NodeKind kind,
                                         std::shared_ptr<Token> mul,
                                         std::shared_ptr<ASTExpressionNode> mulNode,
                                         std::shared_ptr<Token> power,
@@ -1379,7 +1380,27 @@ namespace PythonCore::Runtime
             std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> m_Nodes;
     };
 
+    class ASTAssignmentParameterNode : public ASTStatementNode
+    {
+        public:
+            ASTAssignmentParameterNode( unsigned int start, 
+                                        unsigned int end, 
+                                        ASTNode::NodeKind kind, 
+                                        std::shared_ptr<ASTStatementNode> left, 
+                                        std::shared_ptr<Token> op, 
+                                        std::shared_ptr<ASTExpressionNode> right, 
+                                        std::shared_ptr<Token> comment);
+            std::shared_ptr<ASTStatementNode> getLeft();
+            std::shared_ptr<Token> getOperatorOne();
+            std::shared_ptr<ASTExpressionNode> getRight();
+            std::shared_ptr<Token> getOperatorTwo();
 
+        protected:
+            std::shared_ptr<ASTStatementNode> m_Left;
+            std::shared_ptr<Token> m_Op1;
+            std::shared_ptr<ASTExpressionNode> m_Right;
+            std::shared_ptr<Token> m_Op2;
+    };
 
 }
 

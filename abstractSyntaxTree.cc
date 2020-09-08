@@ -1286,12 +1286,13 @@ std::shared_ptr<ASTExpressionNode> ASTFuncTypeExpressionNode::getRight() { retur
 // ASTTypeListExpressionNode //////////////////////////////////////////////////////////////////////////////////////////
 ASTTypeListExpressionNode::ASTTypeListExpressionNode(   unsigned int start,
                                                         unsigned int end,
+                                                        ASTNode::NodeKind kind,
                                                         std::shared_ptr<Token> mul,
                                                         std::shared_ptr<ASTExpressionNode> mulNode,
                                                         std::shared_ptr<Token> power,
                                                         std::shared_ptr<ASTExpressionNode> powerNode,
                                                         std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes)
-    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_TYPE_LIST), m_Op1(mul), m_Left(mulNode), m_Op2(power), m_Right(powerNode), m_Nodes(nodes) {}
+    :   ASTExpressionNode(start, end, kind), m_Op1(mul), m_Left(mulNode), m_Op2(power), m_Right(powerNode), m_Nodes(nodes) {}
 
 std::shared_ptr<Token> ASTTypeListExpressionNode::getOperatorOne() { return m_Op1; }
 
@@ -1306,4 +1307,20 @@ std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTTypeListExpr
 unsigned int ASTTypeListExpressionNode::count() { return m_Nodes->size(); }
 
 
-//
+// ASTAssignmentParameterNode /////////////////////////////////////////////////////////////////////////////////////////
+ASTAssignmentParameterNode::ASTAssignmentParameterNode( unsigned int start, 
+                                                        unsigned int end, 
+                                                        ASTNode::NodeKind kind, 
+                                                        std::shared_ptr<ASTStatementNode> left, 
+                                                        std::shared_ptr<Token> op, 
+                                                        std::shared_ptr<ASTExpressionNode> right, 
+                                                        std::shared_ptr<Token> comment)
+    :   ASTStatementNode(start, end, kind), m_Op1(op), m_Left(left), m_Right(right), m_Op2(comment) { }
+
+std::shared_ptr<ASTStatementNode> ASTAssignmentParameterNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTAssignmentParameterNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTAssignmentParameterNode::getRight() { return m_Right; }
+
+std::shared_ptr<Token> ASTAssignmentParameterNode::getOperatorTwo() { return m_Op2; }
