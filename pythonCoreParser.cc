@@ -194,7 +194,179 @@ std::shared_ptr<ASTStatementNode> PythonCoreParser::parseParameters()
     return std::make_shared<ASTParameterStatementNode>(start, m_Lexer->getPosition(), op1, right, op2); 
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTypedArgsList() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTypedArgsList() 
+{ 
+    return parseCommonArgList(true); 
+}
+
+std::shared_ptr<ASTStatementNode> PythonCoreParser::parseCommonArgList(bool isTyped) // 
+{
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas;
+    std::shared_ptr<std::vector<std::shared_ptr<ASTStatementNode>>> nodes;
+    std::shared_ptr<Token> mul = nullptr;
+    std::shared_ptr<ASTStatementNode> mulNode = nullptr;
+    std::shared_ptr<Token> power = nullptr;
+    std::shared_ptr<ASTStatementNode> powerNode = nullptr;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+    {
+        mul = m_CurSymbol;
+        m_Lexer->advance();
+        mulNode = isTyped ? parseTFPDef() : parseVFPDef();
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            commas->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+            {
+                power = m_CurSymbol;
+                m_Lexer->advance();
+                powerNode = isTyped ? parseTFPDef() : parseVFPDef();
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            }
+            else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            else
+            {
+                auto first = isTyped ? parseTFPDef() : parseVFPDef();
+                std::shared_ptr<Token> op = nullptr;
+                std::shared_ptr<Token> comment = nullptr;
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+                {
+                    op = m_CurSymbol;
+                    m_Lexer->advance();
+                    auto second = parseTest();
+                    if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                    {
+                        comment = m_CurSymbol;
+                        m_Lexer->advance();
+                    }
+                    first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, op, second, comment);
+                }
+                else if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                {
+                    comment = m_CurSymbol;
+                    m_Lexer->advance();
+                    first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, nullptr, nullptr, comment);
+                }
+                nodes->push_back(first);
+            }
+        }
+    }
+    else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+    {
+        power = m_CurSymbol;
+        m_Lexer->advance();
+        powerNode = isTyped ? parseTFPDef() : parseVFPDef();
+    }
+    else
+    {
+        auto first = isTyped ? parseTFPDef() : parseVFPDef();
+        std::shared_ptr<Token> op = nullptr;
+        std::shared_ptr<Token> comment = nullptr;
+        if (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+        {
+            op = m_CurSymbol;
+            m_Lexer->advance();
+            auto second = parseTest();
+            if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+            {
+                comment = m_CurSymbol;
+                m_Lexer->advance();
+            }
+            first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, op, second, comment);
+        }
+        else if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+        {
+            comment = m_CurSymbol;
+            m_Lexer->advance();
+            first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, nullptr, nullptr, comment);
+        }
+        nodes->push_back(first);
+
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            commas->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+            {
+                mul = m_CurSymbol;
+                m_Lexer->advance();
+                mulNode = isTyped ? parseTFPDef() : parseVFPDef();
+                while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+                {
+                    commas->push_back(m_CurSymbol);
+                    m_Lexer->advance();
+                    if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+                    {
+                        power = m_CurSymbol;
+                        m_Lexer->advance();
+                        powerNode = isTyped ? parseTFPDef() : parseVFPDef();
+                        if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+                    }
+                    else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+                    else
+                    {   
+                        auto first = isTyped ? parseTFPDef() : parseVFPDef();
+                        std::shared_ptr<Token> op = nullptr;
+                        std::shared_ptr<Token> comment = nullptr;
+                        if (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+                        {
+                            op = m_CurSymbol;
+                            m_Lexer->advance();
+                            auto second = parseTest();
+                            if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                            {
+                                comment = m_CurSymbol;
+                                m_Lexer->advance();
+                            }
+                            first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, op, second, comment);
+                        }
+                        else if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                        {
+                            comment = m_CurSymbol;
+                            m_Lexer->advance();
+                            first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, nullptr, nullptr, comment);
+                        }
+                        nodes->push_back(first);
+                    }
+                }
+            }
+            else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+            {
+                power = m_CurSymbol;
+                m_Lexer->advance();
+                powerNode = isTyped ? parseTFPDef() : parseVFPDef();
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            }
+            else
+            {
+                auto first = isTyped ? parseTFPDef() : parseVFPDef();
+                std::shared_ptr<Token> op = nullptr;
+                std::shared_ptr<Token> comment = nullptr;
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_ASSIGN)
+                {
+                    op = m_CurSymbol;
+                    m_Lexer->advance();
+                    auto second = parseTest();
+                    if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                    {
+                        comment = m_CurSymbol;
+                        m_Lexer->advance();
+                    }
+                    first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, op, second, comment);
+                }
+                else if (isTyped && m_CurSymbol->kind() == Token::TokenKind::PY_TYPE_COMMENT)
+                {
+                    comment = m_CurSymbol;
+                    m_Lexer->advance();
+                    first = std::make_shared<ASTAssignmentParameterNode>(start, m_Lexer->getPosition(), first, nullptr, nullptr, comment);
+                }
+                nodes->push_back(first);
+            }
+        }
+    }
+    return std::make_shared<ASTCommonArgsNode>(start, m_Lexer->getPosition(), (isTyped ? ASTNode::NodeKind::NK_TYPED_ARGS_LIST : ASTNode::NodeKind::NK_VAR_ARGS_LIST), mulNode, mul, powerNode, power, nodes);
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTFPDef() 
 { 
@@ -212,7 +384,10 @@ std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseTFPDef()
     return std::make_shared<ASTDefStatementNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_VFP_DEF, op1, nullptr, nullptr);
 }
 
-std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVarArgsList() { return nullptr; }
+std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVarArgsList() 
+{ 
+    return parseCommonArgList(false); 
+}
 
 std::shared_ptr<ASTStatementNode>  PythonCoreParser::parseVFPDef() 
 { 
@@ -2182,5 +2357,5 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTypeList()
             }
         }
     }
-    return std::make_shared<ASTTypeListExpressionNode>(start, m_Lexer->getPosition(), ASTNode::NodeKind::NK_TYPE_LIST, mul, mulNode, power, powerNode, nodes);
+    return std::make_shared<ASTTypeListExpressionNode>(start, m_Lexer->getPosition(), mul, mulNode, power, powerNode, nodes);
 }

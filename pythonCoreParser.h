@@ -24,6 +24,7 @@ namespace PythonCore::Runtime
             std::shared_ptr<ASTStatementNode>  parseTypedArgsList();
             std::shared_ptr<ASTStatementNode>  parseTFPDef();
             std::shared_ptr<ASTStatementNode>  parseVarArgsList();
+            std::shared_ptr<ASTStatementNode>  parseCommonArgList(bool isTyped);
             std::shared_ptr<ASTStatementNode>  parseVFPDef();
             std::shared_ptr<ASTStatementNode>  parseStmt();
             std::shared_ptr<ASTStatementNode>  parseSimpleStmt();
