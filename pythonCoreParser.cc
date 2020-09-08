@@ -2103,5 +2103,84 @@ std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseFuncType()
 
 std::shared_ptr<ASTExpressionNode> PythonCoreParser::parseTypeList()
 {
-    return nullptr;
+    unsigned int start = m_Lexer->getPosition();
+    std::shared_ptr<std::vector<std::shared_ptr<Token>>> commas;
+    std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes;
+    std::shared_ptr<Token> mul = nullptr;
+    std::shared_ptr<ASTExpressionNode> mulNode = nullptr;
+    std::shared_ptr<Token> power = nullptr;
+    std::shared_ptr<ASTExpressionNode> powerNode = nullptr;
+    if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+    {
+        mul = m_CurSymbol;
+        m_Lexer->advance();
+        mulNode = parseTest();
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            commas->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+            {
+                power = m_CurSymbol;
+                m_Lexer->advance();
+                powerNode = parseTest();
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            }
+            else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            else
+            {
+                nodes->push_back(parseTest());
+            }
+        }
+    }
+    else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+    {
+        power = m_CurSymbol;
+        m_Lexer->advance();
+        powerNode = parseTest();
+    }
+    else
+    {
+        nodes->push_back(parseTest());
+        while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+        {
+            commas->push_back(m_CurSymbol);
+            m_Lexer->advance();
+            if (m_CurSymbol->kind() == Token::TokenKind::PY_MUL)
+            {
+                mul = m_CurSymbol;
+                m_Lexer->advance();
+                mulNode = parseTest();
+                while (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA)
+                {
+                    commas->push_back(m_CurSymbol);
+                    m_Lexer->advance();
+                    if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+                    {
+                        power = m_CurSymbol;
+                        m_Lexer->advance();
+                        powerNode = parseTest();
+                        if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+                    }
+                    else if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+                    else
+                    {
+                        nodes->push_back(parseTest());
+                    }
+                }
+            }
+            else if (m_CurSymbol->kind() == Token::TokenKind::PY_POWER)
+            {
+                power = m_CurSymbol;
+                m_Lexer->advance();
+                powerNode = parseTest();
+                if (m_CurSymbol->kind() == Token::TokenKind::PY_COMMA) throw ;
+            }
+            else
+            {
+                nodes->push_back(parseTest());
+            }
+        }
+    }
+    return std::make_shared<ASTTypeListExpressionNode>(start, m_Lexer->getPosition(), mul, mulNode, power, powerNode, nodes);
 }

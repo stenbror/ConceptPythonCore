@@ -1283,4 +1283,27 @@ std::shared_ptr<Token> ASTFuncTypeExpressionNode::getOperatorThree() { return m_
 std::shared_ptr<ASTExpressionNode> ASTFuncTypeExpressionNode::getRight() { return m_Right; }
 
 
+// ASTTypeListExpressionNode //////////////////////////////////////////////////////////////////////////////////////////
+ASTTypeListExpressionNode::ASTTypeListExpressionNode(   unsigned int start,
+                                                        unsigned int end,
+                                                        std::shared_ptr<Token> mul,
+                                                        std::shared_ptr<ASTExpressionNode> mulNode,
+                                                        std::shared_ptr<Token> power,
+                                                        std::shared_ptr<ASTExpressionNode> powerNode,
+                                                        std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> nodes)
+    :   ASTExpressionNode(start, end, ASTNode::NodeKind::NK_TYPE_LIST), m_Op1(mul), m_Left(mulNode), m_Op2(power), m_Right(powerNode), m_Nodes(nodes) {}
+
+std::shared_ptr<Token> ASTTypeListExpressionNode::getOperatorOne() { return m_Op1; }
+
+std::shared_ptr<ASTExpressionNode> ASTTypeListExpressionNode::getLeft() { return m_Left; }
+
+std::shared_ptr<Token> ASTTypeListExpressionNode::getOperatorTwo() { return m_Op2; }
+
+std::shared_ptr<ASTExpressionNode> ASTTypeListExpressionNode::getRight() { return m_Right; }
+
+std::shared_ptr<std::vector<std::shared_ptr<ASTExpressionNode>>> ASTTypeListExpressionNode::getNodes() { return m_Nodes; }
+
+unsigned int ASTTypeListExpressionNode::count() { return m_Nodes->size(); }
+
+
 //
