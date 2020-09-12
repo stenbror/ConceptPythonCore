@@ -43,6 +43,15 @@ namespace PythonCore::Runtime
         public:
             unsigned int getPosition() { return -1; };
             std::shared_ptr<Token> advance() { return nullptr; };
+
+
+        protected:
+            Token::TokenKind isReservedKeywordOrLiteralName();
+            bool isLetterOrDigit(char32_t check);
+
+
+        protected:
+            char32_t *p = nullptr, *pTokenStart = nullptr;
     };
 
 }
