@@ -3,11 +3,23 @@
 
 using namespace PythonCore::Runtime;
 
-
 Token::TokenKind Token::kind()
 {
     return m_Kind;
 }
+
+
+PythonCoreTokenizer::PythonCoreTokenizer(std::shared_ptr<std::basic_string<char32_t>> sourceCode, unsigned int tabSize, bool isInteractive)
+{
+    pBuffer = sourceCode->data(); p = pBuffer; pTokenStart = p;
+}
+
+
+std::shared_ptr<Token> PythonCoreTokenizer::advance()
+{
+    return nullptr;
+}
+
 
 bool PythonCoreTokenizer::isLetterOrDigit(char32_t check)
 {

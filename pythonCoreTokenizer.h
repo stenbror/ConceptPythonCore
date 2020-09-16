@@ -41,8 +41,10 @@ namespace PythonCore::Runtime
     {
 
         public:
-            unsigned int getPosition() { return -1; };
-            std::shared_ptr<Token> advance() { return nullptr; };
+            PythonCoreTokenizer(std::shared_ptr<std::basic_string<char32_t>> sourceCode, unsigned int tabSize, bool isInteractive = false);
+
+            unsigned int getPosition() { return p - pBuffer; };
+            std::shared_ptr<Token> advance();
 
 
         protected:
@@ -51,7 +53,8 @@ namespace PythonCore::Runtime
 
 
         protected:
-            char32_t *p = nullptr, *pTokenStart = nullptr;
+            const char32_t *p = nullptr, *pTokenStart = nullptr;
+            const char32_t *pBuffer;
     };
 
 }
