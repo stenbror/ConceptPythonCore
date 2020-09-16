@@ -3,6 +3,8 @@
 #define PYTHONCORE_TOKENIZER_H
 
 #include <memory>
+#include <string>
+#include <stack>
 
 namespace PythonCore::Runtime
 {
@@ -56,6 +58,8 @@ namespace PythonCore::Runtime
         protected:
             const char32_t *p = nullptr, *pTokenStart = nullptr;
             const char32_t *pBuffer;
+            std::shared_ptr<std::stack<Token::TokenKind>> m_ParenthezisStack;
+            unsigned int m_Level;
     };
 
 }

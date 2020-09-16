@@ -17,6 +17,33 @@ PythonCoreTokenizer::PythonCoreTokenizer(std::shared_ptr<std::basic_string<char3
 
 std::shared_ptr<Token> PythonCoreTokenizer::advance()
 {
+    Token::TokenKind kind;
+
+
+
+    kind = isOperatorOrDelimiter();
+    
+    if (kind == Token::TokenKind::PY_LEFT_PAREN || kind == Token::TokenKind::PY_LEFT_BRACKET || kind == Token::TokenKind::PY_LEFT_CURLY)
+    {
+        m_ParenthezisStack->push(kind); m_Level++;
+    }
+    else if (kind == Token::TokenKind::PY_RIGHT_PAREN || kind == Token::TokenKind::PY_RIGHT_BRACKET || kind == Token::TokenKind::PY_RIGHT_CURLY)
+    {
+        if (m_ParenthezisStack->top() == Token::TokenKind::PY_LEFT_PAREN && kind == Token::TokenKind::PY_RIGHT_PAREN)
+        {
+            m_Level--;  m_ParenthezisStack->pop();
+        }
+        else if (m_ParenthezisStack->top() == Token::TokenKind::PY_LEFT_BRACKET && kind == Token::TokenKind::PY_RIGHT_BRACKET)
+        {
+            m_Level--;  m_ParenthezisStack->pop();
+        }
+        else if (m_ParenthezisStack->top() == Token::TokenKind::PY_LEFT_CURLY && kind == Token::TokenKind::PY_RIGHT_CURLY)
+        {
+            m_Level--;  m_ParenthezisStack->pop();
+        }
+        else throw ;
+    }
+
     return nullptr;
 }
 
