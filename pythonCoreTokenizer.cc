@@ -21,12 +21,12 @@ std::shared_ptr<Token> PythonCoreTokenizer::advance()
 }
 
 
-bool PythonCoreTokenizer::isLetterOrDigit(char32_t check)
+bool PythonCoreTokenizer::isLetterOrDigit(char32_t check) noexcept
 {
     return false;
 }
 
-Token::TokenKind PythonCoreTokenizer::isOperatorOrDelimiter()
+Token::TokenKind PythonCoreTokenizer::isOperatorOrDelimiter() noexcept
 {
     switch (*p)
     {
@@ -87,12 +87,143 @@ Token::TokenKind PythonCoreTokenizer::isOperatorOrDelimiter()
             }
             p++;
             return Token::TokenKind::PY_DIV;
+        case U'%':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_MODULO_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_MODULO;
+        case U'@':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_MATRICE_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_MATRICE;
+        case U'<':
+            if (p[1] == U'<')
+            {
+                if (p[2] == U'=')
+                {
+                    p += 3;
+                    return Token::TokenKind::PY_SHIFT_LEFT_ASSIGN;
+                }
+                p += 2;
+                return Token::TokenKind::PY_SHIFT_LEFT;
+            }
+            else if (p[1] == U'>')
+            {
+                p += 2;
+                return Token::TokenKind::PY_NOT_EQUAL;
+            }
+            else if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_LESS_EQUAL;
+            }
+            p++;
+            return Token::TokenKind::PY_LESS;
+        case U'>':
+            if (p[1] == U'>')
+            {
+                if (p[2] == U'=')
+                {
+                    p += 3;
+                    return Token::TokenKind::PY_SHIFT_RIGHT_ASSIGN;
+                }
+                p += 2;
+                return Token::TokenKind::PY_SHIFT_RIGHT;
+            }
+            else if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_GREATER_EQUAL;
+            }
+            p++;
+            return Token::TokenKind::PY_GREATER;
+        case U'=':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_EQUAL;
+        case U'!':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_NOT_EQUAL;
+            }
+            return Token::TokenKind::PY_INVALID;
+        case U'&':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_BIT_AND_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_BIT_AND;
+        case U'|':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_BIT_OR_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_BIT_OR;
+        case U'^':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_BIT_XOR_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_BIT_XOR;
+        case U'~':
+            p++;
+            return Token::TokenKind::PY_BIT_INVERT;
+        case U':':
+            if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_COLON_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_COLON;
+        case U';':
+            p++;
+            return Token::TokenKind::PY_SEMICOLON;
+        case U',':
+            p++;
+            return Token::TokenKind::PY_COMMA;
+        case U'(':
+            p++;
+            return Token::TokenKind::PY_LEFT_PAREN;
+        case U'[':
+            p++;
+            return Token::TokenKind::PY_LEFT_BRACKET;
+        case U'{':
+            p++;
+            return Token::TokenKind::PY_LEFT_CURLY;
+        case U')':
+            p++;
+            return Token::TokenKind::PY_RIGHT_PAREN;
+        case U']':
+            p++;
+            return Token::TokenKind::PY_RIGHT_BRACKET;
+        case U'}':
+            p++;
+            return Token::TokenKind::PY_RIGHT_CURLY;
     }
     return Token::TokenKind::PY_INVALID;
 }
 
 // Check for valid reserved keyword in Python language 3.9 ////////////////////////////////////////////////////////////
-Token::TokenKind PythonCoreTokenizer::isReservedKeywordOrLiteralName()
+Token::TokenKind PythonCoreTokenizer::isReservedKeywordOrLiteralName() noexcept
 {
     switch (*p)
     {

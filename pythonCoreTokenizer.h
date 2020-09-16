@@ -48,9 +48,9 @@ namespace PythonCore::Runtime
 
 
         protected:
-            Token::TokenKind isReservedKeywordOrLiteralName();
-            Token::TokenKind isOperatorOrDelimiter();
-            bool isLetterOrDigit(char32_t check);
+            Token::TokenKind isReservedKeywordOrLiteralName() noexcept;
+            Token::TokenKind isOperatorOrDelimiter() noexcept;
+            bool isLetterOrDigit(char32_t check) noexcept;
 
 
         protected:
