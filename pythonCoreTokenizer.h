@@ -49,6 +49,7 @@ namespace PythonCore::Runtime
 
         protected:
             Token::TokenKind isReservedKeywordOrLiteralName();
+            Token::TokenKind isOperatorOrDelimiter();
             bool isLetterOrDigit(char32_t check);
 
 

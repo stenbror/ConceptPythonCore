@@ -26,6 +26,70 @@ bool PythonCoreTokenizer::isLetterOrDigit(char32_t check)
     return false;
 }
 
+Token::TokenKind PythonCoreTokenizer::isOperatorOrDelimiter()
+{
+    switch (*p)
+    {
+        case U'+':
+            if (p[1] == '=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_PLUS_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_PLUS;
+        case u'-':
+            if (p[1] == U'>')
+            {
+                p += 2;
+                return Token::TokenKind::PY_ARROW;
+            }
+            else if (p[1] == '=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_MINUS_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_MINUS;
+        case U'*':
+            if (p[1] == U'*')
+            {
+                if (p[2] == U'=')
+                {
+                    p += 3;
+                    return Token::TokenKind::PY_POWER_ASSIGN;
+                }
+                p += 2;
+                return Token::TokenKind::PY_POWER;
+            }
+            else if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_MUL_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_MUL;
+        case U'/':
+            if (p[1] == U'/')
+            {
+                if (p[2] == U'=')
+                {
+                    p += 3;
+                    return Token::TokenKind::PY_FLOOR_DIV_ASSIGN;
+                }
+                p += 2;
+                return Token::TokenKind::PY_FLOOR_DIV;
+            }
+            else if (p[1] == U'=')
+            {
+                p += 2;
+                return Token::TokenKind::PY_DIV_ASSIGN;
+            }
+            p++;
+            return Token::TokenKind::PY_DIV;
+    }
+    return Token::TokenKind::PY_INVALID;
+}
 
 // Check for valid reserved keyword in Python language 3.9 ////////////////////////////////////////////////////////////
 Token::TokenKind PythonCoreTokenizer::isReservedKeywordOrLiteralName()
